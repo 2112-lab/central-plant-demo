@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Texture Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .texture-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .texture-item {
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .texture-image {
+            max-width: 200px;
+            max-height: 200px;
+            border: 1px solid #ccc;
+        }
+        .texture-info {
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .loading {
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Texture Accessibility Tester</h1>
+    <p>This tool checks if your textures are accessible from the browser.</p>
+    
+    <div id="textureContainer" class="texture-container">
+        <!-- Textures will be loaded here -->
+    </div>
+
+    <script>
+        // List of textures to test
+        const textureSets = [
+            {
+                name: 'Gravel Embedded Concrete 1K',
+                path: '/textures/gravel_embedded_concrete_1k',
+                files: ['diffuse.jpg', 'normal.jpg', 'rough.jpg']
+            },
+            {
+                name: 'Gravel Embedded Concrete 2K',
+                path: '/textures/gravel_embedded_concrete_2k',
+                files: ['diffuse.jpg', 'normal.jpg', 'rough.jpg']
+            },
+            {
+                name: 'Pavement 03 1K',
+                path: '/textures/pavement_03_1k',
+                files: ['diffuse.jpg', 'normal.jpg', 'rough.jpg']
+            }
+        ];
+
+        // Additional paths to test
+        const additionalPaths = [
+            '/skyboxes/kloofendal_48d_partly_cloudy_puresky_1k.hdr',
+            '/skyboxes/sky_fallback.jpg'
+        ];
+        
+        // Function to test a texture and add it to the page
+        function testTexture(path, name) {
+            const container = document.getElementById('textureContainer');
+            const item = document.createElement('div');
+            item.className = 'texture-item';
+            
+            const title = document.createElement('h3');
+            title.textContent = name;
+            item.appendChild(title);
+            
+            const image = document.createElement('img');
+            image.className = 'texture-image';
+            
+            const info = document.createElement('div');
+            info.className = 'texture-info';
+            info.innerHTML = `<p class="loading">Loading...</p>`;
+            
+            item.appendChild(image);
+            item.appendChild(info);
+            container.appendChild(item);
+            
+            // Test loading the image
+            image.onload = () => {
+                info.innerHTML = `
+                    <p class="success">Texture loaded successfully</p>
+                    <p>Size: ${image.naturalWidth} x ${image.naturalHeight}px</p>
+                    <p>URL: ${path}</p>
+                `;
+            };
+            
+            image.onerror = () => {
+                info.innerHTML = `
+                    <p class="error">Failed to load texture</p>
+                    <p>URL: ${path}</p>
+                    <p>Check browser console for more details</p>
+                `;
+                console.error(`Failed to load texture: ${path}`);
+            };
+            
+            image.src = path;
+        }
+        
+        // Test all textures
+        window.addEventListener('DOMContentLoaded', () => {
+            // Test texture sets
+            textureSets.forEach(set => {
+                set.files.forEach(file => {
+                    const path = `${set.path}/${file}`;
+                    testTexture(path, `${set.name} - ${file}`);
+                });
+            });
+            
+            // Test additional paths
+            additionalPaths.forEach(path => {
+                const parts = path.split('/');
+                const name = parts[parts.length - 1];
+                testTexture(path, name);
+            });
+        });
+    </script>
+</body>
+</html>

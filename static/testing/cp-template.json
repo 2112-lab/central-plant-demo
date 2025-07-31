@@ -1,0 +1,10 @@
+{
+  "connections": [],
+  "scene": {
+    "object": {
+      "uuid": "PLANT-SCENE",
+      "type": "Scene",
+      "children": []
+    }
+  }
+}

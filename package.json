@@ -1,0 +1,30 @@
+{
+  "name": "central-plant-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "cp": "npm install @2112-lab/central-plant@latest"
+  },
+  "dependencies": {
+    "@2112-lab/central-plant": "^0.1.16",
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/dotenv": "^1.4.2",
+    "@nuxtjs/vuetify": "^1.12.3",
+    "core-js": "^3.25.3",
+    "konva": "^9.3.18",
+    "nuxt": "^2.15.8",
+    "three": "^0.177.0",
+    "vue": "^2.7.10",
+    "vue-server-renderer": "^2.7.10",
+    "vue-template-compiler": "^2.7.10",
+    "vuetify": "^2.7.2",
+    "webpack": "^4.47.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.27.2"
+  }
+}

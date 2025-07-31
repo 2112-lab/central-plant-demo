@@ -1,0 +1,108 @@
+{
+  "id": "gen_0",
+  "index": 0,
+  "name": "Gen_0",
+  "componentCount": 4,
+  "componentTypes": [
+    "PUMP",
+    "CHILLER",
+    "COOLING-TOWER"
+  ],
+  "components": [
+    {
+      "id": "component_0_0",
+      "genIndex": 0,
+      "componentIndex": 0,
+      "type": "COOLING-TOWER",
+      "position": {
+        "x": -4.84829997282395,
+        "y": 0,
+        "z": -9.54920340104611
+      },
+      "rotation": 180,
+      "name": "Component_COOLING-TOWER_0_0",
+      "timestamp": "2025-07-16T19:19:55.042Z"
+    },
+    {
+      "id": "component_0_1",
+      "genIndex": 0,
+      "componentIndex": 1,
+      "type": "CHILLER",
+      "position": {
+        "x": 7.742296724049183,
+        "y": 0,
+        "z": -7.1072462650201444
+      },
+      "rotation": 180,
+      "name": "Component_CHILLER_0_1",
+      "timestamp": "2025-07-16T19:19:55.042Z"
+    },
+    {
+      "id": "component_0_2",
+      "genIndex": 0,
+      "componentIndex": 2,
+      "type": "CHILLER",
+      "position": {
+        "x": 7.97860905353533,
+        "y": 0,
+        "z": -8.821417591312859
+      },
+      "rotation": 270,
+      "name": "Component_CHILLER_0_2",
+      "timestamp": "2025-07-16T19:19:55.042Z"
+    },
+    {
+      "id": "component_0_3",
+      "genIndex": 0,
+      "componentIndex": 3,
+      "type": "CHILLER",
+      "position": {
+        "x": -3.905699287772501,
+        "y": 0,
+        "z": -6.379573765714857
+      },
+      "rotation": 270,
+      "name": "Component_CHILLER_0_3",
+      "timestamp": "2025-07-16T19:19:55.042Z"
+    }
+  ],
+  "timestamp": "2025-07-16T19:19:55.042Z",
+  "params": {
+    "component": {
+      "count": {
+        "min": 1,
+        "max": 6
+      },
+      "generations": 5,
+      "types": [
+        "PUMP",
+        "CHILLER",
+        "COOLING-TOWER"
+      ]
+    },
+    "transform": {
+      "position": {
+        "x": {
+          "min": -10,
+          "max": 10
+        },
+        "y": {
+          "min": 0,
+          "max": 0
+        },
+        "z": {
+          "min": -10,
+          "max": 10
+        }
+      },
+      "rotation": {
+        "options": {
+          "0": true,
+          "90": true,
+          "180": true,
+          "270": true
+        }
+      }
+    }
+  }
+}

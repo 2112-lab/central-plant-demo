@@ -1,0 +1,650 @@
+{
+  "connections": [
+    {
+      "from": "COOLING-TOWER-CONNECTOR-1",
+      "to": "PUMP-1-CONNECTOR-2"
+    },
+    {
+      "from": "COOLING-TOWER-CONNECTOR-1",
+      "to": "PUMP-2-CONNECTOR-2"
+    },
+    {
+      "from": "COOLING-TOWER-CONNECTOR-2",
+      "to": "CHILLER-GROUP-1-CONNECTOR-1"
+    },
+    {
+      "from": "CHILLER-GROUP-1-CONNECTOR-2",
+      "to": "PUMP-1-CONNECTOR-1"
+    },
+    {
+      "from": "CHILLER-GROUP-1-CONNECTOR-2",
+      "to": "PUMP-2-CONNECTOR-1"
+    },
+    {
+      "from": "CHILLER-GROUP-2-CONNECTOR-1",
+      "to": "PUMP-3-CONNECTOR-2"
+    },
+    {
+      "from": "CHILLER-GROUP-2-CONNECTOR-1",
+      "to": "PUMP-4-CONNECTOR-2"
+    },
+    {
+      "from": "CHILLER-GROUP-2-CONNECTOR-2",
+      "to": "PUMP-5-CONNECTOR-2"
+    },
+    {
+      "from": "CHILLER-GROUP-2-CONNECTOR-2",
+      "to": "PUMP-6-CONNECTOR-2"
+    },
+    {
+      "from": "PUMP-3-CONNECTOR-1",
+      "to": "UNKNOWN-CONNECTOR-1"
+    },
+    {
+      "from": "PUMP-4-CONNECTOR-1",
+      "to": "UNKNOWN-CONNECTOR-1"
+    },
+    {
+      "from": "PUMP-5-CONNECTOR-1",
+      "to": "UNKNOWN-CONNECTOR-2"
+    },
+    {
+      "from": "PUMP-6-CONNECTOR-1",
+      "to": "UNKNOWN-CONNECTOR-1"
+    },
+    {
+      "from": "CHILLER-GROUP-2-CONNECTOR-2",
+      "to": "UNKNOWN-CONNECTOR-2"
+    }
+  ],
+  "scene": {
+    "object": {
+      "uuid": "PLANT-SCENE",
+      "name": "Scene",
+      "type": "Scene",
+      "children": [
+        {
+          "uuid": "COOLING-TOWER",
+          "name": "Cooling Tower",
+          "type": "Mesh",
+          "userData": {
+            "libraryId": "COOLING-TOWER",
+            "componentType": "component",
+            "forExport": true
+          },
+          "position": {
+            "x": 0.5,
+            "y": 0,
+            "z": -5.5
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "children": [
+            {
+              "uuid": "COOLING-TOWER-CONNECTOR-1",
+              "name": "Cooling Tower Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 3,
+                "z": 1.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "COOLING-TOWER-CONNECTOR-2",
+              "name": "Cooling Tower Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": 0.5,
+                "y": 3,
+                "z": 1.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "CHILLER",
+          "name": "Chiller",
+          "userData": {
+            "libraryId": "CHILLER",
+            "componentType": "connector",
+            "forExport": true
+          },
+          "position": {
+            "x": 7,
+            "y": 0,
+            "z": 1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "geometry": "CHILLER-GEO",
+          "children": [
+            {
+              "uuid": "CHILLER-GROUP-1-CONNECTOR-1",
+              "name": "Chiller Group 1 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "group": "CHILLER-GROUP-1",
+                "direction": [
+                  -1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -3.5,
+                "y": 1,
+                "z": 0.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "CHILLER-GROUP-1-CONNECTOR-2",
+              "name": "Chiller Group 1 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "group": "CHILLER-GROUP-1",
+                "direction": [
+                  -1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -3.5,
+                "y": 1,
+                "z": -0.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "CHILLER-GROUP-2-CONNECTOR-1",
+              "name": "Chiller Group 2 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "group": "CHILLER-GROUP-2",
+                "direction": [
+                  -1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -3.5,
+                "y": 0.5,
+                "z": -0.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "CHILLER-GROUP-2-CONNECTOR-2",
+              "name": "Chiller Group 2 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "group": "CHILLER-GROUP-2",
+                "direction": [
+                  -1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -3.5,
+                "y": 0.5,
+                "z": 0.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "PUMP-1",
+          "name": "Pump 1",
+          "userData": {
+            "libraryId": "PUMP",
+            "componentType": "component",
+            "forExport": true
+          },
+          "type": "Mesh",
+          "position": {
+            "x": -3.5,
+            "y": 0,
+            "z": -1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 90,
+            "z": 0
+          },
+          "geometry": "PUMP-1-GEO",
+          "children": [
+            {
+              "uuid": "PUMP-1-CONNECTOR-1",
+              "name": "Pump 1 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 0.5,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-1-CONNECTOR-2",
+              "name": "Pump 1 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 1,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "PUMP-2",
+          "name": "Pump 2",
+          "type": "Mesh",
+          "userData": {
+            "libraryId": "PUMP",
+            "componentType": "component",
+            "forExport": true
+          },
+          "position": {
+            "x": -1.5,
+            "y": 0,
+            "z": -1
+          },
+          "rotation": {
+            "x": 0,
+            "y": 90,
+            "z": 0
+          },
+          "geometry": "PUMP-2-GEO",
+          "children": [
+            {
+              "uuid": "PUMP-2-CONNECTOR-1",
+              "name": "Pump 2 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -0.5,
+                "y": 0.5,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-2-CONNECTOR-2",
+              "name": "Pump 2 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 1,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "PUMP-3",
+          "name": "Pump 3",
+          "type": "Mesh",
+          "userData": {
+            "libraryId": "PUMP",
+            "componentType": "component",
+            "forExport": true
+          },
+          "position": {
+            "x": 0.5,
+            "y": 0,
+            "z": 2.5
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "geometry": "PUMP-3-GEO",
+          "children": [
+            {
+              "uuid": "PUMP-3-CONNECTOR-1",
+              "name": "Pump 3 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  -1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 0.5,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-3-CONNECTOR-2",
+              "name": "Pump 3 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 1,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "PUMP-4",
+          "name": "Pump 4",
+          "type": "Mesh",
+          "userData": {
+            "libraryId": "PUMP",
+            "componentType": "component",
+            "forExport": true
+          },
+          "position": {
+            "x": 0.5,
+            "y": 0,
+            "z": 4.5
+          },
+          "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "geometry": "PUMP-4-GEO",
+          "children": [
+            {
+              "uuid": "PUMP-4-CONNECTOR-1",
+              "name": "Pump 4 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  -1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 0.5,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-4-CONNECTOR-2",
+              "name": "Pump 4 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 1,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "PUMP-5",
+          "name": "Pump 5",
+          "type": "Mesh",
+          "userData": {
+            "libraryId": "PUMP",
+            "componentType": "component",
+            "forExport": true
+          },
+          "position": {
+            "x": -6.5,
+            "y": 0,
+            "z": 2.5
+          },
+          "rotation": {
+            "x": 0,
+            "y": 180,
+            "z": 0
+          },
+          "geometry": "PUMP-5-GEO",
+          "children": [
+            {
+              "uuid": "PUMP-5-CONNECTOR-1",
+              "name": "Pump 5 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 0.5,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-5-CONNECTOR-2",
+              "name": "Pump 5 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 1,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "PUMP-6",
+          "name": "Pump 6",
+          "type": "Mesh",
+          "userData": {
+            "libraryId": "PUMP",
+            "componentType": "component",
+            "forExport": true
+          },
+          "position": {
+            "x": -6.5,
+            "y": 0,
+            "z": 4.5
+          },
+          "rotation": {
+            "x": 0,
+            "y": 180,
+            "z": 0
+          },
+          "geometry": "PUMP-6-GEO",
+          "children": [
+            {
+              "uuid": "PUMP-6-CONNECTOR-1",
+              "name": "Pump 6 Connector 1",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  1,
+                  0,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 0.5,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-6-CONNECTOR-2",
+              "name": "Pump 6 Connector 2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 1,
+                "z": 0
+              },
+              "geometry": "CONNECTOR-GEO"
+            }
+          ]
+        },
+        {
+          "uuid": "UNKNOWN-CONNECTOR-1",
+          "name": "Unknown Connector 1",
+          "type": "Mesh",
+          "position": {
+            "x": -4,
+            "y": 0.5,
+            "z": 3.5
+          },
+          "userData": {
+            "direction": [
+              -1,
+              0,
+              0
+            ],
+            "componentType": "connector",
+            "forExport": true
+          },
+          "geometry": "CONNECTOR-GEO"
+        },
+        {
+          "uuid": "UNKNOWN-CONNECTOR-2",
+          "name": "Unknown Connector 2",
+          "type": "Mesh",
+          "userData": {
+            "componentType": "connector",
+            "forExport": true
+          },
+          "position": {
+            "x": -5,
+            "y": 0.5,
+            "z": 1.5
+          },
+          "geometry": "CONNECTOR-GEO"
+        }
+      ]
+    }
+  }
+}

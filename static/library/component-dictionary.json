@@ -1,0 +1,191 @@
+{
+  "PUMP": {
+    "modelKey": "Pump-01-02.glb",
+    "modelType": "glb",
+    "name": "Centrifugal Pump",
+    "thumbnail": "/library/thumbnails/pump-0.1.1.png",
+    "metadata": {
+      "type": "Pump",
+      "category": "Fluid Handling",
+      "description": "High-efficiency centrifugal pump for fluid circulation",
+      "specifications": {
+        "flowRate": "500-2000 GPM",
+        "headPressure": "50-150 ft",
+        "power": "5-25 HP",
+        "material": "Cast Iron"
+      }
+    },
+    "boundingBox": {
+      "x": 2.11,
+      "y": 0.987,
+      "z": 0.661
+    },
+    "adaptedBoundingBox": {
+      "x": 3.0,
+      "y": 1.0,
+      "z": 1.0
+    }
+  },
+  "CHILLER": {
+    "modelKey": "Chiller-01-01.glb",
+    "modelType": "glb",
+    "name": "Air-Cooled Chiller",
+    "thumbnail": "/library/thumbnails/chiller-0.1.1.png",
+    "metadata": {
+      "type": "Chiller",
+      "category": "Cooling Equipment",
+      "description": "Energy-efficient air-cooled chiller for building cooling",
+      "specifications": {
+        "capacity": "50-500 tons",
+        "refrigerant": "R-410A",
+        "efficiency": "10.5-12.0 EER",
+        "material": "Galvanized Steel"
+      }
+    },
+    "boundingBox": {
+      "x": 7.36,
+      "y": 2.9,
+      "z": 1.9
+    },
+    "adaptedBoundingBox": {
+      "x": 8.0,
+      "y": 3.0,
+      "z": 2.0
+    }
+  },
+  "COOLING-TOWER": {
+    "modelKey": "3D-Cooling-Tower-Square-Unit-0.1.1.glb",
+    "modelType": "glb",
+    "name": "Cooling Tower",
+    "thumbnail": "/library/thumbnails/cooling-tower-0.1.1.png",
+    "metadata": {
+      "type": "Cooling Tower",
+      "category": "Heat Rejection",
+      "description": "Induced draft cooling tower for heat rejection",
+      "specifications": {
+        "capacity": "100-1000 tons",
+        "approach": "5-7°F",
+        "fanPower": "5-50 HP",
+        "material": "Fiberglass"
+      }
+    },
+    "boundingBox": {
+      "x": 3.11,
+      "y": 4.89,
+      "z": 3.39
+    },
+    "adaptedBoundingBox": {
+      "x": 4.0,
+      "y": 5.0,
+      "z": 4.0
+    }
+  },
+  "JOINT-TRI-420": {
+    "modelKey": "Joint-Tri-420-01.obj",
+    "modelType": "obj",
+    "name": "Joint-Tri-420",
+    "thumbnail": "/library/thumbnails/joint-tri-420.png",
+    "metadata": {
+      "type": "Joint",
+      "category": "Piping Components",
+      "description": "Triangular joint fitting for 420mm diameter pipes",
+      "specifications": {
+        "diameter": "420mm",
+        "shape": "Triangular",
+        "material": "Stainless Steel",
+        "pressure": "150 PSI"
+      }
+    },
+    "boundingBox": {
+      "x": 0.5,
+      "y": 0.5,
+      "z": 0.5
+    },
+    "adaptedBoundingBox": {
+      "x": 0.5,
+      "y": 0.5,
+      "z": 0.5
+    }
+  },
+  "JOINT-TRI-600": {
+    "modelKey": "Joint-Tri-600-01.obj",
+    "modelType": "obj",
+    "name": "Joint-Tri-600",
+    "thumbnail": "/library/thumbnails/joint-tri-420.png",
+    "metadata": {
+      "type": "Joint",
+      "category": "Piping Components",
+      "description": "Triangular joint fitting for 600mm diameter pipes",
+      "specifications": {
+        "diameter": "600mm",
+        "shape": "Triangular",
+        "material": "Stainless Steel",
+        "pressure": "150 PSI"
+      }
+    },
+    "boundingBox": {
+      "x": 0.7,
+      "y": 0.7,
+      "z": 0.7
+    },
+    "adaptedBoundingBox": {
+      "x": 0.7,
+      "y": 0.7,
+      "z": 0.7
+    }
+  },
+  "JOINT-QUAD-420": {
+    "modelKey": "Joint-Quad-420-01.obj",
+    "modelType": "obj",
+    "name": "Joint-Quad-420",
+    "thumbnail": "/library/thumbnails/joint-tri-420.png",
+    "metadata": {
+      "type": "Joint",
+      "category": "Piping Components",
+      "description": "Quadrilateral joint fitting for 420mm diameter pipes",
+      "specifications": {
+        "diameter": "420mm",
+        "shape": "Quadrilateral",
+        "material": "Stainless Steel",
+        "pressure": "150 PSI"
+      }
+    },
+    "boundingBox": {
+      "x": 0.5,
+      "y": 0.5,
+      "z": 0.5
+    },
+    "adaptedBoundingBox": {
+      "x": 0.5,
+      "y": 0.5,
+      "z": 0.5
+    }
+  },
+  "JOINT-QUAD-600": {
+    "modelKey": "Joint-Quad-600-01.obj",
+    "modelType": "obj",
+    "name": "Joint-Quad-600",
+    "thumbnail": "/library/thumbnails/joint-tri-420.png",
+    "metadata": {
+      "type": "Joint",
+      "category": "Piping Components",
+      "description": "Quadrilateral joint fitting for 600mm diameter pipes",
+      "specifications": {
+        "diameter": "600mm",
+        "shape": "Quadrilateral",
+        "material": "Stainless Steel",
+        "pressure": "150 PSI"
+      }
+    },
+    "boundingBox": {
+      "x": 0.7,
+      "y": 0.7,
+      "z": 0.7
+    },
+    "adaptedBoundingBox": {
+      "x": 0.7,
+      "y": 0.7,
+      "z": 0.7
+    }
+  }
+}
