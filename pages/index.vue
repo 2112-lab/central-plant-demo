@@ -53,51 +53,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- Top navigation bar -->
-    <v-app-bar 
-      :height="navbarHeight"
-      color="#ffffff" 
-      light
-      style="font-family:'Amazon Ember', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; position:relative; z-index:1000; border-bottom: 1px solid #e0e0e0;"
+    
+    <v-btn
+      outlined
+      color="primary"
+      class="mb-n4"
+      @click="openFileImport"
+      style="position:absolute; left:10px; top:10px; z-index:99; background:white"
     >
-      <!-- App title with link to home -->
-      <v-toolbar-title style="width:330px; border:0px solid green; margin-top:15px">
-        <router-link to="/" style="text-decoration: none; color: inherit;">
-          <span class="rubik-mono-one-regular">CP3D Demo</span>
-        </router-link>
-      </v-toolbar-title>            
-      
-      <!-- Quick action buttons on the right side -->
-      <v-spacer></v-spacer>
-      <v-btn
-        outlined
-        color="primary"
-        class="mb-n4"
-        @click="openFileImport"
-        style="text-transform: none; margin-right: 220px;"
-      >
-        <v-icon small class="mr-1">mdi-import</v-icon>
-        Import
-      </v-btn>
-
-      <v-spacer></v-spacer>
-
-    </v-app-bar>    
+      <v-icon small class="mr-1">mdi-import</v-icon>
+      Import
+    </v-btn>
 
     <!-- Main content area - flexible layout with primary viewport and drawer -->    
-    <div style="display: flex; height: calc(100vh - 64px - 15px); width: 100%; overflow: hidden;">      
-      <!-- Quad viewport mode (3x 2D + 1x 3D) -->
-        <div
-          v-if="quadMode"
-          style="height: 100%; width: 100%;"
-        >
-          <QuadViewport
-            ref="quadViewport"
-            :centralPlant="centralPlant"
-          />
-        </div>     
-        
+    <div style="display: flex; height: calc(100vh); width: 100%; overflow: hidden;">      
+      <SceneViewerEnhanced
+        :central-plant="centralPlant"
+      />   
     </div>    
     
     <!-- Notification Snackbar -->
@@ -137,26 +109,14 @@ export default {
       // Scene managers collection - single point of access for all scene utilities
       centralPlant: null,
       
-      // UI layout dimensions
       navbarHeight: 64,       // Height of the top navigation bar
       
-      // Viewport layout state
-      quadMode: true,         // Whether quad mode is enabled (default to true)
-
-      sandboxMode: "Assembly",         // Current active mode (Xeto, Component, Wiring, etc.)
-      sceneObjects: [],            // Processed scene objects for the hierarchy view
-      
       selectedFile: null,          // Currently selected file for import
-      showFileImport: true,       // Whether to show the file import UI
+      showFileImport: false,       // Whether to show the file import UI
       fileErrorMessage: null,      // Error message for file validation
-
-      selectedTransformObject: null,  // Currently selected object for transformation
-      currentTransformData: null,     // Current transform data (position, rotation, scale)
-      transformMode: 'translate',     // Current transform mode (translate, rotate, scale)
       
       // Scene connections data
       currentSceneConnections: [],    // Current scene connections data for the connections tab
-      pathfindingStatus: 'idle',      // Track pathfinding update status for UI feedback
       
       // Preloading states      
       isPreloadingModels: false,
@@ -199,7 +159,6 @@ export default {
   
   // Lifecycle hook - called before the instance is destroyed
   beforeDestroy() {
-    
     // Clean up the CentralPlant
     if (this.centralPlant) {
       try {
@@ -210,9 +169,6 @@ export default {
         console.error('Error disposing CentralPlant:', error)
       }
     }
-    
-    // Remove event listeners
-    this.$nuxt.$off('scene-config-changed', this.onSceneConfigChanged);
   },
     
   // Methods section - contains all component methods
@@ -526,6 +482,6 @@ export default {
 
   /* Prevent scroll bars on body */
   body{
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 </style>
