@@ -64,7 +64,6 @@ export default {
       previousTransformValues: null, // Store previous values for history tracking
         
       // Manager instances
-      hotReloadManager: null,
       disposalManager: null,
       sceneExportManager: null,
       componentManager: null,
@@ -88,12 +87,6 @@ export default {
     }
   },  
   mounted() {
-    // Use console.log initially since logger isn't attached yet
-    console.log('Component mounting...', {
-      instanceId: this.instanceId,
-      isDevelopment: process.env.NODE_ENV === 'development',
-      timestamp: new Date().toISOString()
-    })
     
     try {
       // Check if centralPlant was passed as prop
@@ -108,28 +101,8 @@ export default {
       // Attach all managers and utilities to this component instance
       this.centralPlant.attachToComponent()
       
-      // Now we can use the logger
-      this.logger.info('Component mounting completed with managers attached')
-      
-      // Set up event listener for scene configuration changes
-      this.$nuxt.$on('scene-config-changed', this.handleSceneConfigChanged)
-      
-      // Log pathfinder version information at component startup
-      this.logPathfinderVersion('Component Startup')
-      
       this.init()
       
-      // Hot-reload detection for development
-      if (process.env.NODE_ENV === 'development') {
-        this.$nextTick(() => {
-          // Safety check before calling setupHotReloadHandling
-          if (this.hotReloadManager && typeof this.hotReloadManager.setupHotReloadHandling === 'function') {
-            this.hotReloadManager.setupHotReloadHandling()
-          } else {
-            console.warn('⚠️ Cannot setup hot-reload handling: hotReloadManager is undefined or missing the method')
-          }
-        })
-      }
     } catch (e) {
       console.error('Error during component mounting:', e)
     }
@@ -142,21 +115,6 @@ export default {
     this.isDestroyed = true
 
     try {
-      // Clean up event listeners
-      this.$nuxt.$off('scene-config-changed', this.handleSceneConfigChanged)
-      
-      // Clean up hot-reload handlers (development only)
-      if (this.hotReloadManager) {
-        try {
-          console.log('Cleaning up hot-reload handlers...')
-          this.hotReloadManager.cleanupHotReloadHandlers()
-        } catch (e) {
-          console.error('Error cleaning up hot-reload handlers:', e)
-        } finally {
-          // Ensure reference is always nullified even if cleanup fails
-          this.hotReloadManager = null
-        }
-      }
   
       // Use disposal manager for comprehensive cleanup
       if (this.disposalManager) {
@@ -164,7 +122,6 @@ export default {
           this.disposalManager.cleanupEventListeners()
           this.disposalManager.cleanupControls()
           this.disposalManager.cleanupGlobalReferences()
-          this.disposalManager.cleanupNuxtEventListeners()
         } catch (e) {
           console.error('Error during disposal manager cleanup:', e)
         }
@@ -220,109 +177,6 @@ export default {
     this.beforeDestroy()
   },
   methods: {        
-    // Camera auto-rotation toggle method
-    toggleCameraRotation() {
-      if (!this.cameraControlsManager) return;
-      
-      // Use the cameraControlsManager to toggle auto-rotation
-      const isAutoRotating = this.cameraControlsManager.toggleCameraRotation();
-      
-      // Force Vue reactivity update by triggering a re-render
-      this.$forceUpdate();
-      
-      return isAutoRotating;
-    },
-    
-    // Handle scene configuration changes from SceneConfigs component
-    handleSceneConfigChanged(settings) {
-      console.log('📋 Scene configuration changed:', settings);
-      
-      try {
-        // Handle auto rotation setting
-        if (settings.scene && settings.scene.hasOwnProperty('autoRotation')) {
-          const shouldAutoRotate = settings.scene.autoRotation;
-          
-          if (this.cameraControlsManager) {
-            const currentlyRotating = this.cameraControlsManager.isAutoRotating();
-            
-            // Only toggle if the desired state is different from current state
-            if (shouldAutoRotate !== currentlyRotating) {
-              console.log(`🔄 Toggling auto rotation: ${currentlyRotating} → ${shouldAutoRotate}`);
-              this.toggleCameraRotation();
-            } else {
-              console.log(`✅ Auto rotation already in desired state: ${currentlyRotating}`);
-            }
-          } else {
-            console.warn('⚠️ Camera controls manager not available for auto rotation setting');
-          }
-        }
-        
-        // Handle checkUnderground setting
-        if (settings.scene && settings.scene.hasOwnProperty('checkUnderground')) {
-          const checkUnderground = settings.scene.checkUnderground;
-          console.log(`🔧 Underground checking setting changed to: ${checkUnderground ? 'enabled' : 'disabled'}`);
-          // The setting is stored in localStorage and will be used in onTransformEnd
-        }
-        
-        // Handle environment settings (skybox)
-        if (settings.environment) {
-          console.log('🌍 Environment settings changed:', settings.environment);
-          
-          if (settings.environment.hasOwnProperty('skyboxEnabled')) {
-            const skyboxEnabled = settings.environment.skyboxEnabled;
-            console.log(`🌌 Skybox enabled: ${skyboxEnabled}`);
-            
-            if (this.environmentManager) {
-              if (skyboxEnabled) {
-                // Re-create skybox if enabled
-                this.environmentManager.createSkybox().then(() => {
-                  console.log('✅ Skybox enabled and recreated');
-                }).catch(error => {
-                  console.error('❌ Error recreating skybox:', error);
-                });
-              } else {
-                // Remove skybox if disabled
-                this.environmentManager.removeSkybox();
-                console.log('✅ Skybox disabled and removed');
-              }
-            }
-          }
-          
-          if (settings.environment.skyboxType && settings.environment.skyboxEnabled) {
-            const skyboxType = settings.environment.skyboxType;
-            console.log(`🌌 Skybox type changed to: ${skyboxType}`);
-            
-            if (this.environmentManager) {
-              this.environmentManager.setSkyboxType(skyboxType).then(() => {
-                console.log(`✅ Skybox type changed to: ${skyboxType}`);
-              }).catch(error => {
-                console.error('❌ Error changing skybox type:', error);
-              });
-            }
-          }
-        }
-        
-        // Handle other settings here in the future (e.g., tree view mode)
-        if (settings.editor && settings.editor.treeViewMode) {
-          console.log(`📁 Tree view mode setting: ${settings.editor.treeViewMode}`);
-          // Future implementation for tree view mode changes
-        }
-        
-      } catch (error) {
-        console.error('❌ Error applying scene configuration:', error);
-      }
-    },
-    
-    // Pathfinder methods - delegate to PathfindingManager
-    async getPathfinderVersionInfo() {
-      return this.pathfindingManager ? await this.pathfindingManager.getPathfinderVersionInfo() : null
-    },
-
-    async logPathfinderVersion(context = 'Unknown Context') {
-      if (this.pathfindingManager) {
-        await this.pathfindingManager.logPathfinderVersion(context)
-      }
-    },
 
     // Add method to update pathfinding with new connections
     async updatePathfindingWithConnections(newConnections) {
@@ -405,28 +259,6 @@ export default {
       // Use transform manager's object selection instead of our own
       if (this.transformManager) {
         this.transformManager.setupObjectSelection((obj) => this.isSelectableObject(obj))
-      }
-      
-      // Final sync of auto-rotation state after everything is initialized
-      if (this.cameraControlsManager) {
-        const isRotating = this.cameraControlsManager.isAutoRotating();
-        console.log(`🔄 Auto-rotation state synced: ${isRotating ? 'enabled' : 'disabled'}`);
-        
-        // Check localStorage sceneConfiguration for autoRotation setting
-        if (process.client) {
-          try {
-            const savedSettings = localStorage.getItem('sceneConfigurations');
-            if (savedSettings) {
-              const parsed = JSON.parse(savedSettings);
-              if (parsed.autoRotation === false) {
-                this.toggleCameraRotation();
-                console.log('🔄 Auto camera rotation disabled based on scene configuration');
-              }
-            }
-          } catch (error) {
-            console.error('❌ Error reading scene configuration from localStorage:', error);
-          }
-        }
       }
       
       // Transform controls should only be visible once we have scene content
@@ -666,7 +498,6 @@ export default {
     // Transform control event handlers    
     onObjectSelect(object) {
       this.selectedObjectForTransform = object
-      this.transformLogger.info('Transform target:', object?.uuid || 'none')
 
       // If object is null, it means we clicked away
       if (!object) {
@@ -763,43 +594,6 @@ export default {
     onTransform(object, mode) {
       // Real-time transform feedback with both local and world coordinates
       const transform = this.transformManager.getTransformData()
-      
-      // Log orbit controls state during transform
-      if (this.controls) {
-        console.log('🎮 Orbit Controls State during transform:', {
-          enabled: this.controls.enabled,
-          enableDamping: this.controls.enableDamping,
-          enableZoom: this.controls.enableZoom,
-          enableRotate: this.controls.enableRotate,
-          enablePan: this.controls.enablePan,
-          autoRotate: this.controls.autoRotate,
-          target: {
-            x: this.controls.target.x.toFixed(3),
-            y: this.controls.target.y.toFixed(3),
-            z: this.controls.target.z.toFixed(3)
-          },
-          minDistance: this.controls.minDistance,
-          maxDistance: this.controls.maxDistance,
-          transformControlsActive: this.transformManager?.transformControls?.dragging || false
-        })
-      }
-      
-      // Log translation changes specifically
-      if (mode === 'translate') {
-        console.log('🔄 Translation in progress:', {
-          object: object.uuid,
-          position: {
-            x: object.position.x.toFixed(3),
-            y: object.position.y.toFixed(3),
-            z: object.position.z.toFixed(3)
-          },
-          worldPosition: transform.worldPosition ? {
-            x: transform.worldPosition.x.toFixed(3),
-            y: transform.worldPosition.y.toFixed(3),
-            z: transform.worldPosition.z.toFixed(3)
-          } : null
-        })
-      }
       
       // Update tooltip position if it exists
       if (this.tooltipsManager && object === this.tooltipsManager.selectedMesh) {
@@ -1002,7 +796,6 @@ export default {
       console.log('🗑️ Object removed:', object.uuid)
       
       this.onGatewayConnectionsRevert(object);
-
     },
 
     // Gateway removal callback handlers
@@ -1070,20 +863,6 @@ export default {
         .catch(error => {
           console.error('❌ Error during pathfinding execution:', error)
         })
-    },
-
-    isConnectorOrb(object) {
-      // Check if it's a mesh with connector geometry
-      if (!object.isMesh || !object.geometry) {
-        return false
-      }
-      
-      // Check for CONNECTOR-GEO geometry uuid
-      const hasConnectorGeometry = object.geometry.uuid === 'CONNECTOR-GEO' || object.geometry.uuid === 'GATEWAY-GEO'
-        // Check if uuid includes connector
-      const hasConnectorName = object.uuid && object.uuid.toLowerCase().includes('connector')
-      
-      return (hasConnectorGeometry) && hasConnectorName
     },
 
     isSelectableObject(object) {
@@ -1275,81 +1054,12 @@ export default {
       return this.transformManager.setShowPlanes(enabled)
     },
     
-    // Note: Hot-reload and disposal methods have been moved to respective manager classes
-    // See: HotReloadManager and DisposalManager
-    
-    // Note: Scene export methods have been moved to SceneExportManager
-    
-    // Note: Component management methods have been moved to ComponentManager
-    
-    // Wrapper methods that delegate to the appropriate managers
-    // Export methods - delegate to SceneExportManager
     exportSceneData() {
       return this.sceneExportManager ? this.sceneExportManager.exportSceneData() : null
     },
 
     downloadSceneExport(filename = null) {
       return this.sceneExportManager ? this.sceneExportManager.downloadSceneExport(filename) : false
-    },
-
-    // Hot-reload methods - delegate to HotReloadManager  
-    setupHotReloadHandling() {
-      if (this.hotReloadManager) {
-        this.hotReloadManager.setupHotReloadHandling()
-      }
-    },
-
-    cleanupHotReloadHandlers() {
-      if (this.hotReloadManager) {
-        this.hotReloadManager.cleanupHotReloadHandlers()
-      }
-    },
-
-    // Disposal methods - delegate to DisposalManager
-    async enhancedDisposal() {
-      if (this.disposalManager) {
-        await this.disposalManager.enhancedDisposal()
-      }
-    },
-
-    forceStopOperations() {
-      if (this.disposalManager) {
-        this.disposalManager.forceStopOperations()
-      } else {
-        // Fallback for when disposal manager isn't available
-        this.isDestroyed = true
-        this.isLoading = false
-        this.currentTransition = null
-        
-        if (this.animationId) {
-          cancelAnimationFrame(this.animationId)
-          this.animationId = null
-        }
-      }
-    },
-
-    async enhancedSceneCleanup() {
-      if (this.disposalManager) {
-        await this.disposalManager.enhancedSceneCleanup()
-      }
-    },
-
-    enhancedRendererCleanup() {
-      if (this.disposalManager) {
-        this.disposalManager.enhancedRendererCleanup()
-      }
-    },
-
-    clearPendingOperations() {
-      if (this.hotReloadManager) {
-        this.hotReloadManager.clearPendingOperations()
-      }
-    },
-
-    forceGarbageCollectionHint() {
-      if (this.hotReloadManager) {
-        this.hotReloadManager.forceGarbageCollectionHint()
-      }
     },
 
     // Component methods - delegate to ComponentManager    
@@ -1483,94 +1193,4 @@ export default {
   background-color: #ffffff;
 }
 
-/* LED Status Indicator */
-.updatePaths-led-indicator {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 5px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  font-size: 12px;
-  font-weight: 500;
-  color: #000;
-  user-select: none;
-  pointer-events: auto;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.led-light {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #666;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-}
-
-.updatePaths-led-indicator.active .led-light {
-  background: #22c55e;
-  box-shadow: 
-    0 0 10px rgba(34, 197, 94, 0.6),
-    0 0 20px rgba(34, 197, 94, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.updatePaths-led-indicator:not(.active) .led-light {
-  background: #ef4444;
-  box-shadow: 
-    0 0 10px rgba(239, 68, 68, 0.6),
-    0 0 20px rgba(239, 68, 68, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.led-label {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-}
-
-/* Hover effect to show it's clickable (if you want to make it interactive later) */
-.updatePaths-led-indicator:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: scale(1.05);
-}
-
-.camera-rotate-btn {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  padding: 8px 16px;
-  background-color: rgba(0, 0, 0, 0.6) !important; /* Added !important to ensure this color applies */
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: bold;
-  transition: all 0.2s ease;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.camera-rotate-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-/* Explicitly define inactive state to prevent default browser styling */
-.camera-rotate-btn:not(.active) {
-  background-color: rgba(0, 0, 0, 0.6) !important;
-}
-
-.camera-rotate-btn.active {
-  background-color: rgba(65, 184, 131, 0.8) !important; /* Vue green when active */
-}
 </style>
