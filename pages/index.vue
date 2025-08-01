@@ -77,7 +77,34 @@
     </div>    
 
     <!-- Translation Controls - Bottom Center -->
-    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 10px;">
+    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 10px; align-items: center;">
+      <!-- Add Component Dropdown -->
+      <!-- <v-select
+        v-model="selectedLibraryId"
+        :items="availableLibraryIds"
+        item-text="name"
+        item-value="id"
+        label="Select Component"
+        dense
+        outlined
+        style="min-width: 200px; background: white;"
+        hide-details
+      >
+        <template v-slot:prepend-inner>
+          <v-icon small>mdi-cube-outline</v-icon>
+        </template>
+      </v-select> -->
+      
+      <v-btn
+        color="secondary"
+        @click="addComponentExample()"
+        :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
+        elevation="4"
+      >
+        <v-icon small class="mr-1">mdi-plus</v-icon>
+        Add Component
+      </v-btn>
+      
       <v-btn
         color="primary"
         @click="translateComponentExample()"
@@ -149,6 +176,14 @@ export default {
       componentDictionary: null,
 
       shouldUpdatePaths: false,
+      
+      // Component selection for adding new components
+      selectedLibraryId: 'PUMP',
+      availableLibraryIds: [
+        { id: 'PUMP', name: 'PUMP' },
+        { id: 'CHILLER', name: 'CHILLER' },
+        { id: 'COOLING-TOWER', name: 'COOLING-TOWER' }
+      ],
       
       // Snackbar notification state
       snackbar: {
@@ -568,6 +603,67 @@ export default {
         console.log('🏗️ CentralPlant initialized from index.vue')
       }
       return this.centralPlant
+    },
+
+    /**
+     * Example method demonstrating how to use the centralPlant.add() API
+     * This method adds a component with the selected libraryId to the scene
+     * @returns {Object|false} The added component object if successful, false otherwise
+     */
+    addComponentExample() {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        this.showSnackbar('CentralPlant not initialized', 'error')
+        return false
+      }
+
+      if (!this.selectedLibraryId) {
+        console.error('❌ No library ID selected')
+        this.showSnackbar('Please select a component type first', 'warning')
+        return false
+      }
+
+      try {
+        const options = {
+          position: {
+            x: -6.5, 
+            y: 0, 
+            z: 1.5
+          },
+          rotation: {
+            x: 0, 
+            y: 3.141593, 
+            z: 0
+          }
+        }
+        // Add the component using the centralPlant.add() API
+        const addedComponent = this.centralPlant.add(this.selectedLibraryId, options)
+        
+        if (addedComponent) {
+          console.log('✅ Component added successfully:', {
+            libraryId: this.selectedLibraryId,
+            componentId: addedComponent.uuid || addedComponent.id,
+            position: addedComponent.position
+          })
+          
+          // Show success message with component info
+          const componentName = this.availableLibraryIds.find(item => item.id === this.selectedLibraryId)?.name || this.selectedLibraryId
+          this.showSnackbar(`${componentName} added successfully!`, 'success')
+          
+          // Enable update paths button since we added a new component
+          this.shouldUpdatePaths = true
+          
+          return addedComponent
+        } else {
+          console.error('❌ Failed to add component - centralPlant.add() returned null/undefined')
+          this.showSnackbar('Failed to add component', 'error')
+          return false
+        }
+      } catch (error) {
+        console.error('❌ Error adding component:', error)
+        this.showSnackbar(`Error adding component: ${error.message}`, 'error')
+        return false
+      }
     },
 
     /**
