@@ -100,8 +100,7 @@
 </template>
   
 <script>
-import { CentralPlant } from '@2112-lab/central-plant'
-import SceneViewerEnhanced from '~/assets/js/SceneViewerEnhanced.js'
+import { CentralPlant, SceneViewerEnhanced } from '@2112-lab/central-plant'
 
 export default {
   data() {
