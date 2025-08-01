@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import * as THREE from 'three'
 
 export default {
   name: 'SceneContainer',
@@ -129,13 +130,6 @@ export default {
         } finally {
           this.disposalManager = null
         }
-      }
-
-      // Clean up the managers collection
-      // Note: We don't dispose the centralPlant here since it's managed by the parent component
-      // The parent (index.vue) is responsible for disposing it
-      if (this.centralPlant) {
-        console.log('🧹 Managers collection cleanup handled by parent component')
       }
   
       console.log('Scene cleanup completed')
@@ -448,17 +442,6 @@ export default {
         scale: object.scale.clone()
       }
       
-      // Log orbit controls state at transform start
-      if (this.controls) {
-        console.log('🎮 Orbit Controls State at transform start:', {
-          enabled: this.controls.enabled,
-          autoRotate: this.controls.autoRotate,
-          enableRotate: this.controls.enableRotate,
-          enablePan: this.controls.enablePan,
-          enableZoom: this.controls.enableZoom,
-          transformControlsActive: this.transformManager?.transformControls?.dragging || false
-        })
-      }
     },    
     
     onTransform(object, mode) {
@@ -512,33 +495,12 @@ export default {
         
         // Handle manual segment transformation with connector generation
         if (this.pathfindingManager && this.currentSceneData) {
-          console.log('🚀 Calling handleManualSegmentTransformation...')
-          console.log('🔍 PathfindingManager available:', !!this.pathfindingManager)
-          console.log('🔍 CurrentSceneData available:', !!this.currentSceneData)
-          console.log('🔍 CurrentSceneData connections:', this.currentSceneData.connections?.length || 0)
           this.pathfindingManager.handleManualSegmentTransformation(object, this.currentSceneData);
         } else {
           console.warn('⚠️ PathfindingManager or CurrentSceneData not available')
-          console.log('PathfindingManager:', this.pathfindingManager)
-          console.log('CurrentSceneData:', this.currentSceneData)
         }
       } else {
-        console.log('🔍 Object is not a pipe segment:', {
-          isObject: !!object,
-          hasUserData: !!(object && object.userData),
-          isPipeSegment: !!(object && object.userData && object.userData.isPipeSegment),
-          objectName: object?.name,
-          userData: object?.userData
-        })
-      }
-
-      // Log orbit controls state at transform end
-      if (this.controls) {
-        console.log('🎮 Orbit Controls State at transform end:', {
-          enabled: this.controls.enabled,
-          autoRotate: this.controls.autoRotate,
-          transformControlsActive: this.transformManager?.transformControls?.dragging || false
-        })
+        console.warn('🔍 Object is not a pipe segment')
       }
 
       // Check if component is underground and move to surface if needed
@@ -736,11 +698,9 @@ export default {
     },
 
     isSelectableObject(object) {
-      // console.log('🔍 isSelectableObject check:', object)
 
       if(object.type == "TransformControlsPlane") {
         object = object.object;
-        // console.log('🔍 isSelectableObject recheck:', object)
       }
       
       // Allow pipe segments and junctions to be selected
@@ -748,14 +708,11 @@ export default {
       const isPipeJunction = object.userData?.isPipeJunction === true
       
       if (isPipeSegment) {
-        // console.log('✅ Pipe segment or junction is selectable:', object.name)
         return true
       }
       
       // Exclude regular polyline parent objects (pipe paths) from selection
-      if (object.name && object.name.toLowerCase().includes("polyline") && 
-          !isPipeSegment && !isPipeJunction) {
-        // console.log('❌ Polyline parent object excluded from selection:', object.name)
+      if (object.name && object.name.toLowerCase().includes("polyline") && !isPipeSegment && !isPipeJunction) {
         return false
       }
 
@@ -771,22 +728,6 @@ export default {
       const canTransform = (object.isMesh || object.isObject3D) && 
         (isGLBModel || isConnector || isGateway) && 
         object.visible
-      
-      // Debug logging for gateway selection
-      if (isGateway || object.userData?.componentType === 'gateway') {
-        console.log(`🔍 Gateway selection check for "${object.uuid}":`, {
-          isGLBModel,
-          isConnector,
-          isGateway,
-          canTransform,
-          objectType: object.type,
-          isMesh: object.isMesh,
-          isObject3D: object.isObject3D,
-          visible: object.visible,
-          componentType: object.userData?.componentType,
-          userData: object.userData
-        })
-      }
       
       return canTransform
     },
