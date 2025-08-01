@@ -4,10 +4,6 @@
     <div
       ref="container"
       class="scene-viewport"
-      @drop="onDrop"
-      @dragover="onDragOver"
-      @dragenter="onDragEnter"
-      @dragleave="onDragLeave"
     >
       <!-- Scene content will be rendered here -->
     </div>
@@ -80,9 +76,6 @@ export default {
       animationManager: null,
       cameraControlsManager: null,
       tooltipsManager: null,
-      
-      // Drag and drop manager
-      dragDropManager: null,
       
       // Scene helper utility
       sceneHelper: null,
@@ -196,18 +189,7 @@ export default {
           this.tooltipsManager = null
         }
       }
-  
-      // Clean up drag and drop manager
-      if (this.dragDropManager) {
-        try {
-          this.dragDropManager.dispose()
-        } catch (e) {
-          console.error('Error disposing drag drop manager:', e)
-        } finally {
-          this.dragDropManager = null
-        }
-      }
-  
+
       // Dispose of scene objects and materials
       if (this.disposalManager) {
         try {
@@ -390,7 +372,7 @@ export default {
       this.keyboardControlsManager.setupKeyboardControls()
       this.keyboardControlsManager.setupResizeHandler()
       
-      // Initialize managers that need scene components (tooltip, drag-drop)
+      // Initialize managers that need scene components (tooltip)
       if (this.centralPlant) {
         this.centralPlant.initializePostSceneManagers()
       }
@@ -1393,115 +1375,6 @@ export default {
       return this.componentManager ? this.componentManager.getSceneComponents() : []
     },    updateComponent(componentUuid, updates) {
       return this.componentManager ? this.componentManager.updateComponent(componentUuid, updates) : false
-    },
-
-    // Drag and Drop Methods
-      /**
-     * Handle component drag start with component data
-     */
-    /**
-     * Handle component drag start with component data
-     * Delegates to the dragDropManager
-     */
-    async onComponentDragStart(componentData) {
-      if (!this.dragDropManager) {
-        console.warn('⚠️ Drag drop manager not initialized')
-        return
-      }
-      
-      return await this.dragDropManager.onComponentDragStart(componentData, this.$refs.container)
-    },
-    
-    /**
-     * Handle component drag end
-     * Delegates to the dragDropManager
-     */
-    onComponentDragEnd(componentData) {
-      if (!this.dragDropManager) {
-        console.warn('⚠️ Drag drop manager not initialized')
-        return
-      }
-      
-      return this.dragDropManager.onComponentDragEnd()
-    },
-    
-    /**
-     * Handle drag enter event
-     * Delegates to the dragDropManager
-     */
-    async onDragEnter(event) {
-      if (!this.dragDropManager) {
-        console.warn('⚠️ Drag drop manager not initialized')
-        return
-      }
-      
-      await this.dragDropManager.onDragEnter(event, this.$refs.container)
-    },
-    
-    /**
-     * Handle drag leave event
-     * Delegates to the dragDropManager
-     */
-    onDragLeave(event) {
-      if (!this.dragDropManager) {
-        console.warn('⚠️ Drag drop manager not initialized')
-        return
-      }
-      
-      this.dragDropManager.onDragLeave(event, this.$refs.container)
-    },
-    
-    /**
-     * Handle drag over event to calculate 3D position
-     * Delegates to the dragDropManager
-     */
-    async onDragOver(event) {
-      if (!this.dragDropManager) {
-        console.warn('⚠️ Drag drop manager not initialized')
-        return
-      }
-      
-      await this.dragDropManager.onDragOver(event, this.$refs.container)
-    },
-    
-    /**
-     * Handle drop event to add component to scene
-     * Delegates to the dragDropManager
-     */
-    async onDrop(event) {
-      if (!this.dragDropManager) {
-        console.warn('⚠️ Drag drop manager not initialized')
-        return
-      }
-      
-      // Set up callbacks for DragDropManager
-      const callbacks = {
-        onAddComponent: this.addComponentToScene.bind(this),
-        onComponentAdded: (data) => {
-          this.$emit('component-added-via-drop', data)
-        },
-        onPlacementCanceled: (reason) => {
-          this.$emit('component-placement-canceled', reason)
-        }
-      }
-      
-      await this.dragDropManager.onDrop(event, this.$refs.container, callbacks)
-    },
-    
-    // Public API method to select an object in the scene
-    selectObject(object) {
-      if (!object || !object.uuid) {
-        console.warn('⚠️ Cannot select invalid object')
-        return false
-      }
-      
-      // Select the object for transformation
-      this.selectObjectForTransform(object)
-      
-      // You could emit an event to update UI
-      this.$emit('object-selected-for-transform', object)
-      
-      return true
     },
 
     // Methods for tooltip management
