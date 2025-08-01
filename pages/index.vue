@@ -55,11 +55,11 @@
     </v-dialog>
     
     <v-btn
-      outlined
       color="primary"
       class="mb-n4"
       @click="openFileImport"
       style="position:absolute; left:10px; top:10px; z-index:99; background:white"
+      elevation="4"
     >
       <v-icon small class="mr-1">mdi-import</v-icon>
       Import
@@ -75,6 +75,29 @@
         <!-- Scene content will be rendered here -->
       </div>   
     </div>    
+
+    <!-- Translation Controls - Bottom Center -->
+    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 10px;">
+      <v-btn
+        color="primary"
+        @click="handleTranslateComponent"
+        :disabled="!sceneViewer || !centralPlant"
+        elevation="4"
+      >
+        <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
+        Translate Component
+      </v-btn>
+      
+      <v-btn
+        color="success"
+        @click="handleUpdatePaths"
+        :disabled="!lastTranslatedComponent"
+        elevation="4"
+      >
+        <v-icon small class="mr-1">mdi-refresh</v-icon>
+        Update Paths
+      </v-btn>
+    </div>
     
     <!-- Notification Snackbar -->
     <v-snackbar
@@ -125,6 +148,9 @@ export default {
       // Component dictionary for mapping libraryId to component data
       componentDictionary: null,
       
+      // Translation functionality
+      lastTranslatedComponent: null,  // Store the last translated component for update paths
+      
       // Snackbar notification state
       snackbar: {
         show: false,
@@ -154,11 +180,6 @@ export default {
 
     // Initialize the vanilla JavaScript scene viewer
     await this.initializeSceneViewer();
-
-    setTimeout(() => {
-      console.log("mounted centralPlant:", this.centralPlant);
-      console.log("mounted sceneViewer:", this.sceneViewer);
-    }, 4000)
   },
   
   // Lifecycle hook - called before the instance is destroyed
@@ -196,6 +217,35 @@ export default {
     openFileImport() {
       console.log("openFileImport started");
       this.showFileImport = true;
+    },
+
+    /**
+     * Handle translate component button click
+     */
+    handleTranslateComponent() {
+      console.log("🎯 Translate Component button clicked");
+      console.log("centralPlant:", this.centralPlant);
+      console.log("sceneViewer:", this.sceneViewer);
+
+      const component = this.translateComponentExample('COOLING-TOWER', 'x', 2.5);
+      if (component) {
+        this.lastTranslatedComponent = component;
+        this.showSnackbar('Component translated successfully! You can now update paths.', 'success');
+      }
+    },
+
+    /**
+     * Handle update paths button click
+     */
+    handleUpdatePaths() {
+      console.log("🔄 Update Paths button clicked");
+      
+      if (this.lastTranslatedComponent) {
+        this.updatePathsExample(this.lastTranslatedComponent);
+        this.lastTranslatedComponent = null; // Reset after updating
+      } else {
+        this.showSnackbar('No translated component available. Please translate a component first.', 'warning');
+      }
     },
     
     // Show the file import dialog
@@ -488,23 +538,6 @@ export default {
         // Create the scene viewer instance
         this.sceneViewer = new SceneViewerEnhanced(container, this.centralPlant, this)
 
-        // Set up event listeners for scene viewer events
-        this.sceneViewer.on('sceneDataUpdated', (data) => {
-          console.log('Scene data updated:', data)
-        })
-
-        this.sceneViewer.on('objectSelected', (object) => {
-          console.log('Object selected:', object)
-        })
-
-        this.sceneViewer.on('transformUpdate', (transform) => {
-          console.log('Transform update:', transform)
-        })
-
-        this.sceneViewer.on('sceneChanged', (data) => {
-          console.log('Scene changed:', data)
-        })
-
         // Initialize the scene viewer
         const success = await this.sceneViewer.init()
         
@@ -565,6 +598,79 @@ export default {
         console.log('🏗️ CentralPlant initialized from index.vue')
       }
       return this.centralPlant
+    },
+
+    /**
+     * Example method demonstrating how to use the new translate API
+     * This method can be called from the browser console for testing
+     * Usage: this.$refs.app.translateComponentExample('COMPONENT-ID', 'x', 2.5)
+     * @returns {Object|false} The translated component object if successful, false otherwise
+     */
+    translateComponentExample(componentId, axis, value) {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        return false
+      }
+      
+      console.log(`🎯 Translating component ${componentId} by ${value} units along ${axis}-axis`)
+      
+      const component = this.centralPlant.translate(componentId, axis, value)
+      
+      return component;
+    },
+
+    updatePathsExample(component) {
+      if (component) {
+        const componentId = component.uuid || component.userData?.originalUuid || component.name || 'unknown'
+        console.log(`✅ Updating paths for component ${componentId}`)
+        
+        // Update paths with the returned component
+        this.centralPlant.updatePaths(component)
+        this.showSnackbar(`Paths updated successfully for component ${componentId}`, 'success')
+        
+        return component
+      } else {
+        console.error(`❌ Failed to update paths - no component provided`)
+        this.showSnackbar(`Failed to update paths - no component provided`, 'error')
+        return false
+      }
+    },
+
+    /**
+     * Helper method to get all components in the scene (for testing the translate API)
+     * This can be useful to find component IDs for testing
+     */
+    getSceneComponentIds() {
+      if (!this.sceneViewer) {
+        console.warn('⚠️ Scene viewer not available')
+        return []
+      }
+      
+      const componentIds = []
+      
+      if (this.sceneViewer.scene) {
+        this.sceneViewer.scene.traverse((child) => {
+          if (child.userData && child.userData.componentType === 'component') {
+            const id = child.uuid || child.userData.originalUuid || child.name
+            if (id) {
+              componentIds.push({
+                id: id,
+                name: child.name,
+                type: child.userData.componentType,
+                libraryId: child.userData.libraryId,
+                position: {
+                  x: child.position.x.toFixed(3),
+                  y: child.position.y.toFixed(3),
+                  z: child.position.z.toFixed(3)
+                }
+              })
+            }
+          }
+        })
+      }
+      
+      console.log(`📋 Found ${componentIds.length} components in scene:`, componentIds)
+      return componentIds
     },
 
   }
