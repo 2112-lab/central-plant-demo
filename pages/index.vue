@@ -98,12 +98,7 @@
 <script>
 import { CentralPlant } from '@2112-lab/central-plant'
 
-import SceneViewerWrapper from '../components/SceneViewerWrapper.vue'
-
 export default {
-  components: {
-    SceneViewerWrapper
-  },
   data() {
     return {
       // Scene managers collection - single point of access for all scene utilities
