@@ -80,7 +80,7 @@
     <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 10px;">
       <v-btn
         color="primary"
-        @click="handleTranslateComponent"
+        @click="translateComponentExample()"
         :disabled="!sceneViewer || !centralPlant"
         elevation="4"
       >
@@ -90,8 +90,8 @@
       
       <v-btn
         color="success"
-        @click="handleUpdatePaths"
-        :disabled="!lastTranslatedComponent"
+        @click="updatePathsExample()"
+        :disabled="shouldUpdatePaths === false"
         elevation="4"
       >
         <v-icon small class="mr-1">mdi-refresh</v-icon>
@@ -147,9 +147,8 @@ export default {
       
       // Component dictionary for mapping libraryId to component data
       componentDictionary: null,
-      
-      // Translation functionality
-      lastTranslatedComponent: null,  // Store the last translated component for update paths
+
+      shouldUpdatePaths: false,
       
       // Snackbar notification state
       snackbar: {
@@ -217,35 +216,6 @@ export default {
     openFileImport() {
       console.log("openFileImport started");
       this.showFileImport = true;
-    },
-
-    /**
-     * Handle translate component button click
-     */
-    handleTranslateComponent() {
-      console.log("🎯 Translate Component button clicked");
-      console.log("centralPlant:", this.centralPlant);
-      console.log("sceneViewer:", this.sceneViewer);
-
-      const component = this.translateComponentExample('COOLING-TOWER', 'x', 2.5);
-      if (component) {
-        this.lastTranslatedComponent = component;
-        this.showSnackbar('Component translated successfully! You can now update paths.', 'success');
-      }
-    },
-
-    /**
-     * Handle update paths button click
-     */
-    handleUpdatePaths() {
-      console.log("🔄 Update Paths button clicked");
-      
-      if (this.lastTranslatedComponent) {
-        this.updatePathsExample(this.lastTranslatedComponent);
-        this.lastTranslatedComponent = null; // Reset after updating
-      } else {
-        this.showSnackbar('No translated component available. Please translate a component first.', 'warning');
-      }
     },
     
     // Show the file import dialog
@@ -606,34 +576,29 @@ export default {
      * Usage: this.$refs.app.translateComponentExample('COMPONENT-ID', 'x', 2.5)
      * @returns {Object|false} The translated component object if successful, false otherwise
      */
-    translateComponentExample(componentId, axis, value) {
+    translateComponentExample() {
       if (!this.centralPlant) {
         console.error('❌ CentralPlant not initialized')
         return false
       }
+
+      // Hard-coded example of translate() param values
+      const componentId = 'COOLING-TOWER';
+      const axis = 'x';
+      const value = 2.5;
       
-      console.log(`🎯 Translating component ${componentId} by ${value} units along ${axis}-axis`)
-      
-      const component = this.centralPlant.translate(componentId, axis, value)
-      
-      return component;
+      this.centralPlant.translate(componentId, axis, value)
+
+      this.shouldUpdatePaths = true;
     },
 
-    updatePathsExample(component) {
-      if (component) {
-        const componentId = component.uuid || component.userData?.originalUuid || component.name || 'unknown'
-        console.log(`✅ Updating paths for component ${componentId}`)
-        
-        // Update paths with the returned component
-        this.centralPlant.updatePaths(component)
-        this.showSnackbar(`Paths updated successfully for component ${componentId}`, 'success')
-        
-        return component
-      } else {
-        console.error(`❌ Failed to update paths - no component provided`)
-        this.showSnackbar(`Failed to update paths - no component provided`, 'error')
-        return false
+    updatePathsExample() {        
+      if(this.shouldUpdatePaths) {
+        this.centralPlant.updatePaths()
+        this.showSnackbar(`Paths updated successfully`, 'success')
       }
+
+      this.shouldUpdatePaths = false;
     },
 
     /**
