@@ -11,16 +11,6 @@
 </template>
 
 <script>
-import * as THREE from 'three'
-
-/*
- * UUID PRESERVATION STRATEGY:
- * This component prioritizes hardcoded UUIDs from JSON files over Three.js auto-generated UUIDs.
- * - All objects store their original hardcoded UUID in userData.originalUuid
- * - Matching logic prioritizes hardcoded UUIDs first, then falls back to name-based generation
- * - Export functions preserve hardcoded UUIDs using getHardcodedUuid() utility
- * - Import functions set both object.uuid and userData.originalUuid to the JSON UUID
- */
 
 export default {
   name: 'SceneContainer',
@@ -31,24 +21,11 @@ export default {
     }
   },
   data() {
-    return {
-      // Instance tracking for hot-reload handling
-      instanceId: Date.now() + Math.random(), // Unique instance identifier
-      
+    return {      
       scene: null,
       camera: null,
       renderer: null,
       controls: null,
-      pathfinder: null,
-      composer: null,
-      bloomPass: null,
-      ssaoPass: null,
-      envMap: null,
-      textureLoader: null,
-      gltfLoader: null,
-      performanceMonitor: null,
-      performanceUI: null,
-      resizeObserver: null,      
       currentSceneData: null,
       
       // Flag to stop animation loop during cleanup
@@ -58,9 +35,7 @@ export default {
       transformManager: null,
       selectedObjectForTransform: null,
       transformMode: 'translate',
-      transformSpace: 'world',
       transformHistory: [],
-      objectSelectionHandler: null,
       previousTransformValues: null, // Store previous values for history tracking
         
       // Manager instances
@@ -78,9 +53,6 @@ export default {
       
       // Scene helper utility
       sceneHelper: null,
-      
-      // Pathfinder version cache
-      pathfinderVersionInfo: null,
       
       // Transform settings
       shouldUpdatePaths: true // Toggle for automatic updates for paths after transforms
@@ -265,96 +237,6 @@ export default {
       console.log('🔄 Transform controls will be enabled after scene loading')
     },    
     
-    // Environment methods - delegate to EnvironmentManager
-    async createSkybox() {
-      return this.environmentManager ? await this.environmentManager.createSkybox() : null
-    },
-
-    setupLighting() {
-      if (this.environmentManager) {
-        this.environmentManager.setupLighting()
-      }
-    },
-
-    async addTexturedGround() {
-      if (this.environmentManager) {
-        await this.environmentManager.addTexturedGround()
-      }
-    },
-
-    async addBrickWalls() {
-      if (this.environmentManager) {
-        await this.environmentManager.addBrickWalls()
-      }
-    },
-
-    addHorizonFog() {
-      return this.environmentManager ? this.environmentManager.addHorizonFog() : null
-    },    
-    
-    // Load GLB model for library objects - delegate to SceneOperationsManager    
-    async loadLibraryModel(targetMesh, jsonEntry, componentData) {
-      return this.sceneOperationsManager ? 
-        await this.sceneOperationsManager.loadLibraryModel(targetMesh, jsonEntry, componentData) : 
-        targetMesh
-    },
-    
-    // Helper function to verify model preloader cache - delegate to SceneOperationsManager
-    async verifyModelPreloaderCache() {
-      return this.sceneOperationsManager ? 
-        await this.sceneOperationsManager.verifyModelPreloaderCache() : 
-        null
-    },
-    
-    // Helper function to preload missing models for a scene - delegate to SceneOperationsManager
-    async preloadMissingModels(data, componentDictionary) {
-      if (this.sceneOperationsManager) {
-        await this.sceneOperationsManager.preloadMissingModels(data, componentDictionary)
-      }
-    },
-    
-    // Helper function to create materials with texture sets - delegate to SceneOperationsManager
-    async createSceneMaterials(data) {
-      return this.sceneOperationsManager ? 
-        await this.sceneOperationsManager.createSceneMaterials(data) : 
-        { materials: {}, crosscubeTextureSet: null }
-    },
-      
-    // Helper function to create geometries from component library - delegate to SceneOperationsManager
-    createSceneGeometries(data, componentDictionary) {
-      return this.sceneOperationsManager ? 
-        this.sceneOperationsManager.createSceneGeometries(data, componentDictionary) : 
-        {}
-    },
-      
-    // Helper function to create object from scene data - delegate to SceneOperationsManager
-    createSceneObject(obj, geometries, materials) {
-      return this.sceneOperationsManager ? 
-        this.sceneOperationsManager.createSceneObject(obj, geometries, materials) : 
-        null
-    },
-      
-    // Helper function to compute world bounding boxes - delegate to SceneOperationsManager
-    computeWorldBoundingBoxes(data) {
-      if (this.sceneOperationsManager) {
-        this.sceneOperationsManager.computeWorldBoundingBoxes(data)
-      }
-    },
-    
-    // Material factory function to reduce duplication - delegate to PathfindingManager
-    createPipeMaterial(crosscubeTextureSet, pathIndex) {
-      return this.pathfindingManager ? 
-        this.pathfindingManager.createPipeMaterial(crosscubeTextureSet, pathIndex) : 
-        new THREE.MeshPhysicalMaterial({ color: this.getPathColor(pathIndex) })
-    },
-    
-    // Helper function to create pipe paths - delegate to PathfindingManager
-    createPipePaths(paths, crosscubeTextureSet) {
-      if (this.pathfindingManager) {
-        this.pathfindingManager.createPipePaths(paths, crosscubeTextureSet)
-      }
-    },
-    
     // Consolidated scene loading function - delegate to SceneOperationsManager
     async loadSceneData(data, isImported = true) {
       if (this.sceneOperationsManager) {
@@ -371,18 +253,6 @@ export default {
     async loadScene() {
       if (this.sceneOperationsManager) {
         await this.sceneOperationsManager.loadScene()
-      }
-    },
-    
-    animate() {
-      // Delegate to animation manager
-      this.animationManager.startAnimation()
-    },    
-    
-    // Set up event listeners for scene loading - delegate to SceneOperationsManager
-    setupEventListeners() {
-      if (this.sceneOperationsManager) {
-        this.sceneOperationsManager.setupEventListeners()
       }
     },
     
