@@ -67,9 +67,13 @@
 
     <!-- Main content area - flexible layout with primary viewport and drawer -->    
     <div style="display: flex; height: calc(100vh); width: 100%; overflow: hidden;">      
-      <SceneViewerEnhanced
-        :central-plant="centralPlant"
-      />   
+      <div 
+        id="scene-container" 
+        ref="sceneContainer"
+        style="width: 100%; height: 100%; position: relative; background-color: #ffffff;"
+      >
+        <!-- Scene content will be rendered here -->
+      </div>   
     </div>    
     
     <!-- Notification Snackbar -->
@@ -97,12 +101,14 @@
   
 <script>
 import { CentralPlant } from '@2112-lab/central-plant'
+import SceneViewerEnhanced from '~/assets/js/SceneViewerEnhanced.js'
 
 export default {
   data() {
     return {
       // Scene managers collection - single point of access for all scene utilities
       centralPlant: null,
+      sceneViewer: null, // Add reference to the vanilla JS scene viewer
       
       navbarHeight: 64,       // Height of the top navigation bar
       
@@ -147,13 +153,32 @@ export default {
     // Start model preloading immediately when the page loads
     this.initializeModelPreloading();
 
+    // Initialize the vanilla JavaScript scene viewer
+    await this.initializeSceneViewer();
+
     setTimeout(() => {
       console.log("mounted centralPlant:", this.centralPlant);
+      console.log("mounted sceneViewer:", this.sceneViewer);
     }, 4000)
   },
   
   // Lifecycle hook - called before the instance is destroyed
   beforeDestroy() {
+    // Clean up Nuxt event listeners
+    this.$nuxt.$off('loadNewScene', this.handleLoadNewScene)
+    this.$nuxt.$off('createNewScene', this.handleCreateNewScene)
+    
+    // Clean up the scene viewer
+    if (this.sceneViewer) {
+      try {
+        this.sceneViewer.dispose()
+        this.sceneViewer = null
+        console.log('🧹 SceneViewer disposed from index.vue')
+      } catch (error) {
+        console.error('Error disposing SceneViewer:', error)
+      }
+    }
+    
     // Clean up the CentralPlant
     if (this.centralPlant) {
       try {
@@ -450,6 +475,87 @@ export default {
     },
 
     /**
+     * Initialize the vanilla JavaScript scene viewer
+     */
+    async initializeSceneViewer() {
+      try {
+        // Get the container element
+        const container = this.$refs.sceneContainer
+        if (!container) {
+          console.error('❌ Scene container element not found')
+          return false
+        }
+
+        // Create the scene viewer instance
+        this.sceneViewer = new SceneViewerEnhanced(container, this.centralPlant, this)
+
+        // Set up event listeners for scene viewer events
+        this.sceneViewer.on('sceneDataUpdated', (data) => {
+          console.log('Scene data updated:', data)
+        })
+
+        this.sceneViewer.on('objectSelected', (object) => {
+          console.log('Object selected:', object)
+        })
+
+        this.sceneViewer.on('transformUpdate', (transform) => {
+          console.log('Transform update:', transform)
+        })
+
+        this.sceneViewer.on('sceneChanged', (data) => {
+          console.log('Scene changed:', data)
+        })
+
+        // Initialize the scene viewer
+        const success = await this.sceneViewer.init()
+        
+        if (success) {
+          console.log('✅ Vanilla JavaScript SceneViewer initialized successfully')
+          
+          // Set up Nuxt event listeners for scene operations
+          this.$nuxt.$on('loadNewScene', this.handleLoadNewScene)
+          this.$nuxt.$on('createNewScene', this.handleCreateNewScene)
+          
+          return true
+        } else {
+          console.error('❌ Failed to initialize SceneViewer')
+          return false
+        }
+      } catch (error) {
+        console.error('❌ Error initializing SceneViewer:', error)
+        return false
+      }
+    },
+
+    /**
+     * Handle loading new scene from Nuxt events
+     */
+    async handleLoadNewScene(sceneData) {
+      if (this.sceneViewer && sceneData) {
+        try {
+          await this.sceneViewer.loadSceneFromData(sceneData)
+          console.log('✅ New scene loaded via Nuxt event')
+        } catch (error) {
+          console.error('❌ Error loading new scene:', error)
+        }
+      }
+    },
+
+    /**
+     * Handle creating new empty scene from Nuxt events
+     */
+    handleCreateNewScene() {
+      if (this.sceneViewer) {
+        try {
+          this.sceneViewer.createEmptyScene()
+          console.log('✅ New empty scene created via Nuxt event')
+        } catch (error) {
+          console.error('❌ Error creating new scene:', error)
+        }
+      }
+    },
+
+    /**
      * Initialize the CentralPlant for accessing scene utilities
      * This is called early in the lifecycle to create the collection instance
      */
@@ -473,10 +579,5 @@ export default {
     font-family: "Rubik Mono One", monospace;
     font-weight: 100;
     font-style: normal;
-  }
-
-  /* Prevent scroll bars on body */
-  body{
-    /* overflow: hidden; */
   }
 </style>
