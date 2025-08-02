@@ -103,7 +103,7 @@
             </v-stepper-step>
 
             <v-stepper-content step="1">
-              <div class="pa-3">
+              <div class="pa-1">
                 <v-alert
                   color="info"
                   border="left"
@@ -140,7 +140,7 @@
             </v-stepper-step>
 
             <v-stepper-content step="2">
-              <div class="pa-3">
+              <div class="pa-1">
                 <v-alert
                   color="info"
                   border="left"
@@ -149,7 +149,7 @@
                   class="mb-3"
                 >
                   <div class="d-flex align-center">
-                    <v-icon small class="mr-2">mdi-information</v-icon>
+                    <v-icon small class="mr-2">mdi-axis-arrow</v-icon>
                     <span class="text-caption">Position your component as needed in the 3D scene <br><br> translate(componentId, axis, value)</span>
                   </div>
                 </v-alert>
@@ -177,7 +177,7 @@
             </v-stepper-step>
 
             <v-stepper-content step="3">
-              <div class="pa-3">
+              <div class="pa-1">
                 <v-alert
                   color="success"
                   border="left"
@@ -186,7 +186,7 @@
                   class="mb-3"
                 >
                   <div class="d-flex align-center">
-                    <v-icon small class="mr-2">mdi-check-circle</v-icon>
+                    <v-icon small class="mr-2">mdi-refresh</v-icon>
                     <span class="text-caption">Ready to update and finalize all connection paths <br><br> updatePaths()</span>
                   </div>
                 </v-alert>
@@ -214,7 +214,20 @@
             </v-stepper-step>
 
             <v-stepper-content step="4">
-              <div class="pa-3">                
+              <div class="pa-1">
+                <v-alert
+                  color="primary"
+                  border="left"
+                  colored-border
+                  dense
+                  class="mb-3"
+                >
+                  <div class="d-flex align-center">
+                    <v-icon small class="mr-2">mdi-plus</v-icon>
+                    <span class="text-caption">Add a new component to the scene with positioning options <br><br> addComponent(libraryId, options)</span>
+                  </div>
+                </v-alert>
+                
                 <v-btn
                   color="primary"
                   @click="executeStepAction(4)"
@@ -238,7 +251,7 @@
             </v-stepper-step>
 
             <v-stepper-content step="5">
-              <div class="pa-3">
+              <div class="pa-1">
                 <v-alert
                   color="info"
                   border="left"
@@ -248,7 +261,7 @@
                 >
                   <div class="d-flex align-center">
                     <v-icon small class="mr-2">mdi-import</v-icon>
-                    <span class="text-caption">Import a JSON scene file to load components and connections</span>
+                    <span class="text-caption">Import a JSON scene file to load components and connections <br><br> importScene(jsonData)</span>
                   </div>
                 </v-alert>
                 
