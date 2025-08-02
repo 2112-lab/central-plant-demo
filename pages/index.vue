@@ -54,7 +54,7 @@
       </v-card>
     </v-dialog>
     
-    <v-btn
+    <!-- <v-btn
       color="primary"
       class="mb-n4"
       @click="openFileImport"
@@ -63,77 +63,210 @@
     >
       <v-icon small class="mr-1">mdi-import</v-icon>
       Import
-    </v-btn>
+    </v-btn> -->
 
-    <!-- Main content area - flexible layout with primary viewport and drawer -->    
+    <!-- Main content area - flexible layout with primary viewport and right sidebar -->    
     <div style="display: flex; height: calc(100vh); width: 100%; overflow: hidden;">      
       <div 
         id="scene-container" 
         ref="sceneContainer"
-        style="width: 100%; height: 100%; position: relative; background-color: #ffffff;"
+        style="position:absolute; top:20px; left:20px; right:420px; bottom:20px; box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12)"
       >
         <!-- Scene content will be rendered here -->
       </div>   
     </div>    
 
-    <!-- Translation Controls - Bottom Center -->
-    <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; gap: 10px; align-items: center;">
-      <!-- Add Component Dropdown -->
-      <!-- <v-select
-        v-model="selectedLibraryId"
-        :items="availableLibraryIds"
-        item-text="name"
-        item-value="id"
-        label="Select Component"
-        dense
-        outlined
-        style="min-width: 200px; background: white;"
-        hide-details
+    <!-- Sequential Operations Stepper - Right Sidebar -->
+    <div style="position: fixed; top: 20px; right: 20px; bottom: 20px; width: 380px; z-index: 100;">
+      <v-card 
+        elevation="4" 
+        style="height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; flex-direction: column;"
       >
-        <template v-slot:prepend-inner>
-          <v-icon small>mdi-cube-outline</v-icon>
-        </template>
-      </v-select> -->
-      
-      <v-btn
-        color="secondary"
-        @click="addComponentExample()"
-        :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
-        elevation="4"
-      >
-        <v-icon small class="mr-1">mdi-plus</v-icon>
-        Add Component
-      </v-btn>
-      
-      <v-btn
-        color="primary"
-        @click="translateComponentExample()"
-        :disabled="!sceneViewer || !centralPlant"
-        elevation="4"
-      >
-        <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
-        Translate Component
-      </v-btn>
-      
-      <v-btn
-        color="success"
-        @click="updatePathsExample()"
-        :disabled="shouldUpdatePaths === false"
-        elevation="4"
-      >
-        <v-icon small class="mr-1">mdi-refresh</v-icon>
-        Update Paths
-      </v-btn>
-      
-      <v-btn
-        color="info"
-        @click="addConnectionExample()"
-        :disabled="!sceneViewer || !centralPlant"
-        elevation="4"
-      >
-        <v-icon small class="mr-1">mdi-connection</v-icon>
-        Add Connection
-      </v-btn>
+        <!-- Stepper Header -->
+        <v-card-title class="py-3">
+          <v-icon class="mr-2">mdi-format-list-numbered</v-icon>
+          <span class="text-h6">API Examples</span>
+        </v-card-title>
+        
+        <v-divider></v-divider>
+        
+        <!-- Stepper Content -->
+        <div style="flex: 1; overflow-y: auto;">
+          <v-stepper v-model="currentStep" vertical linear class="elevation-0" style="background: transparent;">
+            <v-stepper-step 
+              :complete="currentStep > 1" 
+              step="1"
+              :editable="false"
+            >
+              Add Connection
+              <small>Connect components</small>
+            </v-stepper-step>
+
+            <v-stepper-content step="1">
+              <div class="pa-3">
+                <v-alert
+                  color="info"
+                  border="left"
+                  colored-border
+                  dense
+                  class="mb-3"
+                >
+                  <div class="d-flex align-center">
+                    <v-icon small class="mr-2">mdi-connection</v-icon>
+                    <span class="text-caption">Connect components together to create flow paths <br><br> addConnection(from, to)</span>
+                  </div>
+                </v-alert>
+                
+                <v-btn
+                  color="info"
+                  @click="executeStepAction(1)"
+                  :disabled="!sceneViewer || !centralPlant"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-connection</v-icon>
+                  Add Connection
+                </v-btn>
+              </div>
+            </v-stepper-content>
+
+            <v-stepper-step 
+              :complete="currentStep > 2" 
+              step="2"
+              :editable="false"
+            >
+              Translate
+              <small>Position component</small>
+            </v-stepper-step>
+
+            <v-stepper-content step="2">
+              <div class="pa-3">
+                <v-alert
+                  color="info"
+                  border="left"
+                  colored-border
+                  dense
+                  class="mb-3"
+                >
+                  <div class="d-flex align-center">
+                    <v-icon small class="mr-2">mdi-information</v-icon>
+                    <span class="text-caption">Position your component as needed in the 3D scene <br><br> translate(componentId, axis, value)</span>
+                  </div>
+                </v-alert>
+                
+                <v-btn
+                  color="success"
+                  @click="executeStepAction(2)"
+                  :disabled="!sceneViewer || !centralPlant"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
+                  Apply Translation
+                </v-btn>
+              </div>
+            </v-stepper-content>
+
+            <v-stepper-step 
+              :complete="currentStep > 3" 
+              step="3"
+              :editable="false"
+            >
+              Update Paths
+              <small>Finalize connections</small>
+            </v-stepper-step>
+
+            <v-stepper-content step="3">
+              <div class="pa-3">
+                <v-alert
+                  color="success"
+                  border="left"
+                  colored-border
+                  dense
+                  class="mb-3"
+                >
+                  <div class="d-flex align-center">
+                    <v-icon small class="mr-2">mdi-check-circle</v-icon>
+                    <span class="text-caption">Ready to update and finalize all connection paths <br><br> updatePaths()</span>
+                  </div>
+                </v-alert>
+                
+                <v-btn
+                  color="success"
+                  @click="executeStepAction(3)"
+                  :disabled="shouldUpdatePaths === false"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-refresh</v-icon>
+                  Update Paths
+                </v-btn>
+              </div>
+            </v-stepper-content>
+
+            <v-stepper-step 
+              :complete="currentStep > 4" 
+              step="4"
+              :editable="false"
+            >
+              Add Component
+              <small>Select and place component</small>
+            </v-stepper-step>
+
+            <v-stepper-content step="4">
+              <div class="pa-3">                
+                <v-btn
+                  color="primary"
+                  @click="executeStepAction(4)"
+                  :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-plus</v-icon>
+                  Add Component
+                </v-btn>
+              </div>
+            </v-stepper-content>
+
+            <v-stepper-step 
+              :complete="currentStep > 5" 
+              step="5"
+              :editable="false"
+            >
+              Import Scene
+              <small>Load external scene file</small>
+            </v-stepper-step>
+
+            <v-stepper-content step="5">
+              <div class="pa-3">
+                <v-alert
+                  color="info"
+                  border="left"
+                  colored-border
+                  dense
+                  class="mb-3"
+                >
+                  <div class="d-flex align-center">
+                    <v-icon small class="mr-2">mdi-import</v-icon>
+                    <span class="text-caption">Import a JSON scene file to load components and connections</span>
+                  </div>
+                </v-alert>
+                
+                <v-btn
+                  color="info"
+                  @click="executeStepAction(5)"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-import</v-icon>
+                  Import Scene File
+                </v-btn>
+              </div>
+            </v-stepper-content>
+          </v-stepper>
+        </div>
+        
+      </v-card>
     </div>
     
     <!-- Notification Snackbar -->
@@ -188,7 +321,7 @@ export default {
       shouldUpdatePaths: false,
       
       // Component selection for adding new components
-      selectedLibraryId: 'PUMP',
+      selectedLibraryId: 'COOLING-TOWER',
       availableLibraryIds: [
         { id: 'PUMP', name: 'PUMP' },
         { id: 'CHILLER', name: 'CHILLER' },
@@ -201,6 +334,16 @@ export default {
         text: '',
         color: 'info',
         timeout: 3000
+      },
+      
+      // Stepper state for sequential operations
+      currentStep: 1,
+      stepCompleted: {
+        1: false, // Add Component
+        2: false, // Translate Component  
+        3: false, // Add Connection
+        4: false, // Update Paths
+        5: false  // Import Scene
       },
     };
   },
@@ -521,6 +664,60 @@ export default {
     },
 
     /**
+     * Execute the action for a specific step in the workflow
+     * @param {Number} step The step number to execute
+     */
+    executeStepAction(step) {
+      switch (step) {
+        case 1:
+          // Step 1: Add Connection
+          const connectionResult = this.addConnectionExample()
+          if (connectionResult) {
+            this.stepCompleted[1] = true
+            this.currentStep = 2
+            this.showSnackbar('Connection added! Now position components.', 'success')
+          }
+          break
+          
+        case 2:
+          // Step 2: Translate Component
+          this.translateComponentExample()
+          this.stepCompleted[2] = true
+          this.currentStep = 3
+          this.showSnackbar('Translation applied! Now update paths to finalize.', 'success')
+          break
+          
+        case 3:
+          // Step 3: Update Paths
+          this.updatePathsExample()
+          this.stepCompleted[3] = true
+          this.currentStep = 4
+          this.showSnackbar('Paths updated! Now add a new component.', 'success')
+          break
+          
+        case 4:
+          // Step 4: Add Component
+          const result = this.addComponentExample()
+          if (result) {
+            this.stepCompleted[4] = true
+            this.currentStep = 5
+            this.showSnackbar('Component added! Now you can import a scene file.', 'success')
+          }
+          break
+          
+        case 5:
+          // Step 5: Import Scene
+          this.openFileImport()
+          this.stepCompleted[5] = true
+          this.showSnackbar('Import dialog opened! Select a JSON scene file.', 'info')
+          break
+          
+        default:
+          console.warn('Unknown step:', step)
+      }
+    },
+
+    /**
      * Show a snackbar notification
      * @param {String} message The message to display
      * @param {String} color The color of the snackbar (success, error, warning, info)
@@ -609,7 +806,7 @@ export default {
     },
 
     /**
-     * Example method demonstrating how to use the centralPlant.add() API
+     * Example method demonstrating how to use the centralPlant.addComponent() API
      * This method adds a component with the selected libraryId to the scene
      * @returns {Object|false} The added component object if successful, false otherwise
      */
@@ -629,18 +826,18 @@ export default {
       try {
         const options = {
           position: {
-            x: -6.5, 
+            x: -0.5, 
             y: 0, 
-            z: 1.5
+            z: -5.5
           },
           rotation: {
             x: 0, 
-            y: 3.141593, 
+            y: 0, 
             z: 0
           }
         }
-        // Add the component using the centralPlant.add() API
-        const addedComponent = this.centralPlant.add(this.selectedLibraryId, options)
+        // Add the component using the centralPlant.addComponent() API
+        const addedComponent = this.centralPlant.addComponent(this.selectedLibraryId, options)
         
         if (addedComponent) {
           console.log('✅ Component added successfully:', {
@@ -658,7 +855,7 @@ export default {
           
           return addedComponent
         } else {
-          console.error('❌ Failed to add component - centralPlant.add() returned null/undefined')
+          console.error('❌ Failed to add component - centralPlant.addComponent() returned null/undefined')
           this.showSnackbar('Failed to add component', 'error')
           return false
         }
@@ -714,8 +911,14 @@ export default {
 
       try {
         // Example connection between a cooling tower and pump connector
-        const fromConnectorId = 'COOLING-TOWER-CONNECTOR-1'
-        const toConnectorId = 'PUMP-1-CONNECTOR-2'
+        const fromConnectorId = 'COOLING-TOWER-CONNECTOR-2'
+        const toConnectorId = 'CHILLER-GROUP-1-CONNECTOR-1'
+
+        const componentId = 'COOLING-TOWER';
+        const axis = 'x';
+        const value = 0;
+        
+        this.centralPlant.translate(componentId, axis, value)
         
         // Add the connection using the centralPlant.addConnection() API
         const addedConnection = this.centralPlant.addConnection(fromConnectorId, toConnectorId)
@@ -723,11 +926,15 @@ export default {
         if (addedConnection) {
           console.log('✅ Connection added successfully:', addedConnection)
           
+          // Automatically update paths after adding connection
+          this.centralPlant.updatePaths()
+          console.log('✅ Paths updated automatically after adding connection')
+          
           // Show success message with connection info
           this.showSnackbar(`Connection added: ${fromConnectorId} → ${toConnectorId}`, 'success')
           
-          // Enable update paths button since we added a new connection
-          this.shouldUpdatePaths = true
+          // Reset update paths flag since we already updated
+          this.shouldUpdatePaths = false
           
           return addedConnection
         } else {

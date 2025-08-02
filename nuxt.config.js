@@ -9,6 +9,10 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
+  env: {
+    DEFAULT_CENTRAL_PLANT_URL: './mock-data/cp-01-04.json'
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'central-plant-app',
@@ -52,10 +56,6 @@ export default {
     '@nuxtjs/dotenv'
   ],
 
-  // Public runtime config (accessible on both client and server)
-  publicRuntimeConfig: {
-    defaultCentralPlantUrl: './mock-data/cp-01-01.json'
-  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extend(config, { isDev, isClient }) {
