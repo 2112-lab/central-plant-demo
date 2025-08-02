@@ -124,6 +124,16 @@
         <v-icon small class="mr-1">mdi-refresh</v-icon>
         Update Paths
       </v-btn>
+      
+      <v-btn
+        color="info"
+        @click="addConnectionExample()"
+        :disabled="!sceneViewer || !centralPlant"
+        elevation="4"
+      >
+        <v-icon small class="mr-1">mdi-connection</v-icon>
+        Add Connection
+      </v-btn>
     </div>
     
     <!-- Notification Snackbar -->
@@ -502,14 +512,7 @@ export default {
         this.preloadingProgress = await modelPreloader.preloadAllModels(componentDictionary)
         
         console.log('🎉 Model preloading completed:', this.preloadingProgress)
-        
-        // Expose preloader to global scope for debugging
-        if (typeof window !== 'undefined') {
-          window.modelPreloader = modelPreloader
-          window.preloaderStats = () => modelPreloader.getCacheStats()
-          window.getCentralPlant = () => this.centralPlant
-          window.getImportedSceneData = () => this.centralPlant?.importedSceneData
-        }        
+              
       } catch (error) {
         console.error('❌ Failed to initialize model preloading:', error)      
       } finally {
@@ -600,7 +603,7 @@ export default {
       if (!this.centralPlant) {
         // Initialize with a placeholder - the actual component instance will be set later
         this.centralPlant = new CentralPlant(null)
-        console.log('🏗️ CentralPlant initialized from index.vue')
+        console.log('🏗️ CentralPlant initialized from index.vue:', this.centralPlant)
       }
       return this.centralPlant
     },
@@ -698,6 +701,113 @@ export default {
     },
 
     /**
+     * Example method demonstrating how to use the new addConnection API
+     * This method adds a connection between two predefined connector IDs
+     * @returns {Object|false} The added connection object if successful, false otherwise
+     */
+    addConnectionExample() {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        this.showSnackbar('CentralPlant not initialized', 'error')
+        return false
+      }
+
+      try {
+        // Example connection between a cooling tower and pump connector
+        const fromConnectorId = 'COOLING-TOWER-CONNECTOR-1'
+        const toConnectorId = 'PUMP-1-CONNECTOR-2'
+        
+        // Add the connection using the centralPlant.addConnection() API
+        const addedConnection = this.centralPlant.addConnection(fromConnectorId, toConnectorId)
+        
+        if (addedConnection) {
+          console.log('✅ Connection added successfully:', addedConnection)
+          
+          // Show success message with connection info
+          this.showSnackbar(`Connection added: ${fromConnectorId} → ${toConnectorId}`, 'success')
+          
+          // Enable update paths button since we added a new connection
+          this.shouldUpdatePaths = true
+          
+          return addedConnection
+        } else {
+          console.error('❌ Failed to add connection - centralPlant.addConnection() returned null/undefined')
+          this.showSnackbar('Failed to add connection', 'error')
+          return false
+        }
+      } catch (error) {
+        console.error('❌ Error adding connection:', error)
+        this.showSnackbar(`Error adding connection: ${error.message}`, 'error')
+        return false
+      }
+    },
+
+    /**
+     * Example method demonstrating how to get all current connections
+     * This method retrieves all connections from the scene data
+     * @returns {Array} Array of connection objects
+     */
+    getConnectionsExample() {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        return []
+      }
+
+      const connections = this.centralPlant.getConnections()
+      console.log('🔍 Current connections:', connections)
+      
+      if (connections.length > 0) {
+        this.showSnackbar(`Found ${connections.length} connections`, 'info')
+      } else {
+        this.showSnackbar('No connections found', 'warning')
+      }
+      
+      return connections
+    },
+
+    /**
+     * Example method demonstrating how to remove a connection
+     * This method removes a predefined connection between two connector IDs
+     * @returns {boolean} True if connection was removed, false otherwise
+     */
+    removeConnectionExample() {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        this.showSnackbar('CentralPlant not initialized', 'error')
+        return false
+      }
+
+      try {
+        // Example: Remove the same connection we added in addConnectionExample
+        const fromConnectorId = 'COOLING-TOWER-CONNECTOR-1'
+        const toConnectorId = 'PUMP-1-CONNECTOR-2'
+        
+        // Remove the connection using the centralPlant.removeConnection() API
+        const wasRemoved = this.centralPlant.removeConnection(fromConnectorId, toConnectorId)
+        
+        if (wasRemoved) {
+          console.log('✅ Connection removed successfully')
+          
+          // Show success message
+          this.showSnackbar(`Connection removed: ${fromConnectorId} ↔ ${toConnectorId}`, 'success')
+          
+          // Enable update paths button since we removed a connection
+          this.shouldUpdatePaths = true
+          
+          return true
+        } else {
+          console.warn('⚠️ Connection not found or could not be removed')
+          this.showSnackbar('Connection not found to remove', 'warning')
+          return false
+        }
+      } catch (error) {
+        console.error('❌ Error removing connection:', error)
+        this.showSnackbar(`Error removing connection: ${error.message}`, 'error')
+        return false
+      }
+    },
+
+    /**
      * Helper method to get all components in the scene (for testing the translate API)
      * This can be useful to find component IDs for testing
      */
@@ -732,6 +842,45 @@ export default {
       
       console.log(`📋 Found ${componentIds.length} components in scene:`, componentIds)
       return componentIds
+    },
+
+    /**
+     * Helper method to get all connector IDs in the scene (for testing connection APIs)
+     * This can be useful to find connector IDs for making connections
+     */
+    getSceneConnectorIds() {
+      if (!this.sceneViewer) {
+        console.warn('⚠️ Scene viewer not available')
+        return []
+      }
+      
+      const connectorIds = []
+      
+      if (this.sceneViewer.scene) {
+        this.sceneViewer.scene.traverse((child) => {
+          if (child.userData && child.userData.componentType === 'connector') {
+            const id = child.uuid || child.userData.originalUuid || child.name
+            if (id) {
+              connectorIds.push({
+                id: id,
+                name: child.name,
+                type: child.userData.componentType,
+                parentComponentId: child.userData.parentComponentId,
+                direction: child.userData.direction,
+                group: child.userData.group,
+                position: {
+                  x: child.position.x.toFixed(3),
+                  y: child.position.y.toFixed(3),
+                  z: child.position.z.toFixed(3)
+                }
+              })
+            }
+          }
+        })
+      }
+      
+      console.log(`🔌 Found ${connectorIds.length} connectors in scene:`, connectorIds)
+      return connectorIds
     },
 
   }
