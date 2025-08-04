@@ -147,13 +147,42 @@
                 :items="availableComponentIdsForTranslation"
                 item-text="text"
                 item-value="id"
-                label="Select Component"
+                label="Component"
                 prepend-icon="mdi-cube-outline"
                 dense
                 outlined
-                class="mb-3"
                 :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
-                :hint="availableComponentIdsForTranslation.length === 0 ? 'No components available - add components first' : ''"
+                persistent-hint
+              />
+              
+              <v-select
+                v-model="selectedAxisForTranslation"
+                :items="[
+                  { text: 'x', value: 'x' },
+                  { text: 'y', value: 'y' },
+                  { text: 'z', value: 'z' }
+                ]"
+                item-text="text"
+                item-value="value"
+                label="Axis"
+                prepend-icon="mdi-axis"
+                dense
+                outlined
+                :disabled="!sceneViewer || !centralPlant"
+              />
+              
+              <v-text-field
+                v-model.number="selectedValueForTranslation"
+                label="Value"
+                type="number"
+                step="0.5"
+                prepend-icon="mdi-numeric"
+                dense
+                outlined
+                :disabled="!sceneViewer || !centralPlant"
+                :rules="[validateMultipleOfHalf]"
+                hint="Translation distance in 3D units (must be multiple of 0.5)"
+                class="mb-2"
                 persistent-hint
               />
               
@@ -310,6 +339,8 @@ export default {
       
       // Component selection for translation
       selectedComponentIdForTranslation: null,
+      selectedAxisForTranslation: 'x',
+      selectedValueForTranslation: 2.5,
       
       // Snackbar notification state
       snackbar: {
@@ -761,6 +792,30 @@ export default {
     },
 
     /**
+     * Validate that a value is a multiple of 0.5
+     * @param {number} value The value to validate
+     * @returns {boolean|string} True if valid, error message if invalid
+     */
+    validateMultipleOfHalf(value) {
+      if (value === null || value === undefined || value === '') {
+        return 'Value is required'
+      }
+      
+      const numValue = Number(value)
+      
+      if (isNaN(numValue)) {
+        return 'Must be a valid number'
+      }
+      
+      // Check if the value is a multiple of 0.5
+      if ((numValue * 2) % 1 !== 0) {
+        return 'Value must be a multiple of 0.5 (e.g., 0.5, 1.0, 1.5, 2.0, etc.)'
+      }
+      
+      return true
+    },
+
+    /**
      * Example method demonstrating how to use the centralPlant.addComponent() API
      * This method adds a component with the selected libraryId to the scene
      * @returns {Object|false} The added component object if successful, false otherwise
@@ -849,8 +904,8 @@ export default {
 
       // Use the selected component ID from the dropdown
       const componentId = this.selectedComponentIdForTranslation;
-      const axis = 'x';
-      const value = 2.5;
+      const axis = this.selectedAxisForTranslation;
+      const value = this.selectedValueForTranslation;
       
       try {
         this.centralPlant.translate(componentId, axis, value)
