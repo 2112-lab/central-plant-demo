@@ -76,222 +76,174 @@
       </div>   
     </div>    
 
-    <!-- Sequential Operations Stepper - Right Sidebar -->
+    <!-- API Examples Panel - Right Sidebar -->
     <div style="position: fixed; top: 20px; right: 20px; bottom: 20px; width: 380px; z-index: 100;">
       <v-card 
         elevation="4" 
         style="height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; flex-direction: column;"
       >
-        <!-- Stepper Header -->
+        <!-- Header -->
         <v-card-title class="py-3">
-          <v-icon class="mr-2">mdi-format-list-numbered</v-icon>
+          <v-icon class="mr-2">mdi-api</v-icon>
           <span class="text-h6">API Examples</span>
         </v-card-title>
         
         <v-divider></v-divider>
         
-        <!-- Stepper Content -->
-        <div style="flex: 1; overflow-y: auto;">
-          <v-stepper v-model="currentStep" vertical linear class="elevation-0" style="background: transparent;">
-            <v-stepper-step 
-              :complete="currentStep > 1" 
-              step="1"
-              :editable="false"
-            >
-              Add Connection
-              <small>Connect components</small>
-            </v-stepper-step>
-
-            <v-stepper-content step="1">
-              <div class="pa-1">
-                <v-alert
-                  color="info"
-                  border="left"
-                  colored-border
-                  dense
-                  class="mb-3"
-                >
-                  <div class="d-flex align-center">
-                    <v-icon small class="mr-2">mdi-connection</v-icon>
-                    <span class="text-caption">Connect components together to create flow paths <br><br> addConnection(from, to)</span>
-                  </div>
-                </v-alert>
-                
-                <v-btn
-                  color="info"
-                  @click="executeStepAction(1)"
-                  :disabled="!sceneViewer || !centralPlant"
-                  elevation="2"
-                  block
-                >
-                  <v-icon small class="mr-1">mdi-connection</v-icon>
-                  Add Connection
-                </v-btn>
+        <!-- Content -->
+        <div style="flex: 1; overflow-y: auto; padding: 16px;">
+          
+          <!-- Add Component Section -->
+          <v-card outlined class="mb-4">
+            <v-card-subtitle class="d-flex align-center">
+              <v-icon small class="mr-2" color="primary">mdi-plus</v-icon>
+              <span class="font-weight-medium">Add Component</span>
+            </v-card-subtitle>
+            <v-card-text class="pt-2">
+              <div class="text-caption text--secondary mb-3">
+                Add a new component to the scene with positioning options
+                <br><code class="text-primary">addComponent(libraryId, options)</code>
               </div>
-            </v-stepper-content>
+              
+              <v-select
+                v-model="selectedLibraryId"
+                :items="availableLibraryIds"
+                item-text="name"
+                item-value="id"
+                label="Component Type"
+                prepend-icon="mdi-cube-outline"
+                dense
+                outlined
+                class="mb-3"
+              />
+              
+              <v-btn
+                color="primary"
+                @click="addComponentExample"
+                :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
+                elevation="2"
+                block
+              >
+                <v-icon small class="mr-1">mdi-plus</v-icon>
+                Add Component
+              </v-btn>
+            </v-card-text>
+          </v-card>
 
-            <v-stepper-step 
-              :complete="currentStep > 2" 
-              step="2"
-              :editable="false"
-            >
-              Translate
-              <small>Position component</small>
-            </v-stepper-step>
-
-            <v-stepper-content step="2">
-              <div class="pa-1">
-                <v-alert
-                  color="info"
-                  border="left"
-                  colored-border
-                  dense
-                  class="mb-3"
-                >
-                  <div class="d-flex align-center">
-                    <v-icon small class="mr-2">mdi-axis-arrow</v-icon>
-                    <span class="text-caption">Position your component as needed in the 3D scene <br><br> translate(componentId, axis, value)</span>
-                  </div>
-                </v-alert>
-                
-                <v-select
-                  v-model="selectedComponentIdForTranslation"
-                  :items="availableComponentIdsForTranslation"
-                  item-text="text"
-                  item-value="id"
-                  label="Select Component to Translate"
-                  prepend-icon="mdi-cube-outline"
-                  dense
-                  outlined
-                  class="mb-3"
-                  :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
-                  :hint="availableComponentIdsForTranslation.length === 0 ? 'No components available - add components first' : ''"
-                  persistent-hint
-                />
-                
-                <v-btn
-                  color="success"
-                  @click="executeStepAction(2)"
-                  :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForTranslation"
-                  elevation="2"
-                  block
-                >
-                  <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
-                  Apply Translation
-                </v-btn>
+          <!-- Translate Component Section -->
+          <v-card outlined class="mb-4">
+            <v-card-subtitle class="d-flex align-center">
+              <v-icon small class="mr-2" color="success">mdi-axis-arrow</v-icon>
+              <span class="font-weight-medium">Translate Component</span>
+            </v-card-subtitle>
+            <v-card-text class="pt-2">
+              <div class="text-caption text--secondary mb-3">
+                Position your component as needed in the 3D scene
+                <br><code class="text-primary">translate(componentId, axis, value)</code>
               </div>
-            </v-stepper-content>
+              
+              <v-select
+                v-model="selectedComponentIdForTranslation"
+                :items="availableComponentIdsForTranslation"
+                item-text="text"
+                item-value="id"
+                label="Select Component"
+                prepend-icon="mdi-cube-outline"
+                dense
+                outlined
+                class="mb-3"
+                :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
+                :hint="availableComponentIdsForTranslation.length === 0 ? 'No components available - add components first' : ''"
+                persistent-hint
+              />
+              
+              <v-btn
+                color="success"
+                @click="translateComponentExample"
+                :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForTranslation"
+                elevation="2"
+                block
+              >
+                <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
+                Apply Translation
+              </v-btn>
+            </v-card-text>
+          </v-card>
 
-            <v-stepper-step 
-              :complete="currentStep > 3" 
-              step="3"
-              :editable="false"
-            >
-              Update Paths
-              <small>Finalize connections</small>
-            </v-stepper-step>
-
-            <v-stepper-content step="3">
-              <div class="pa-1">
-                <v-alert
-                  color="success"
-                  border="left"
-                  colored-border
-                  dense
-                  class="mb-3"
-                >
-                  <div class="d-flex align-center">
-                    <v-icon small class="mr-2">mdi-refresh</v-icon>
-                    <span class="text-caption">Ready to update and finalize all connection paths <br><br> updatePaths()</span>
-                  </div>
-                </v-alert>
-                
-                <v-btn
-                  color="success"
-                  @click="executeStepAction(3)"
-                  :disabled="shouldUpdatePaths === false"
-                  elevation="2"
-                  block
-                >
-                  <v-icon small class="mr-1">mdi-refresh</v-icon>
-                  Update Paths
-                </v-btn>
+          <!-- Add Connection Section -->
+          <v-card outlined class="mb-4">
+            <v-card-subtitle class="d-flex align-center">
+              <v-icon small class="mr-2" color="info">mdi-connection</v-icon>
+              <span class="font-weight-medium">Add Connection</span>
+            </v-card-subtitle>
+            <v-card-text class="pt-2">
+              <div class="text-caption text--secondary mb-3">
+                Connect components together to create flow paths
+                <br><code class="text-primary">addConnection(from, to)</code>
               </div>
-            </v-stepper-content>
+              
+              <v-btn
+                color="info"
+                @click="addConnectionExample"
+                :disabled="!sceneViewer || !centralPlant"
+                elevation="2"
+                block
+              >
+                <v-icon small class="mr-1">mdi-connection</v-icon>
+                Add Connection
+              </v-btn>
+            </v-card-text>
+          </v-card>
 
-            <v-stepper-step 
-              :complete="currentStep > 4" 
-              step="4"
-              :editable="false"
-            >
-              Add Component
-              <small>Select and place component</small>
-            </v-stepper-step>
-
-            <v-stepper-content step="4">
-              <div class="pa-1">
-                <v-alert
-                  color="primary"
-                  border="left"
-                  colored-border
-                  dense
-                  class="mb-3"
-                >
-                  <div class="d-flex align-center">
-                    <v-icon small class="mr-2">mdi-plus</v-icon>
-                    <span class="text-caption">Add a new component to the scene with positioning options <br><br> addComponent(libraryId, options)</span>
-                  </div>
-                </v-alert>
-                
-                <v-btn
-                  color="primary"
-                  @click="executeStepAction(4)"
-                  :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
-                  elevation="2"
-                  block
-                >
-                  <v-icon small class="mr-1">mdi-plus</v-icon>
-                  Add Component
-                </v-btn>
+          <!-- Update Paths Section -->
+          <v-card outlined class="mb-4">
+            <v-card-subtitle class="d-flex align-center">
+              <v-icon small class="mr-2" color="success">mdi-refresh</v-icon>
+              <span class="font-weight-medium">Update Paths</span>
+            </v-card-subtitle>
+            <v-card-text class="pt-2">
+              <div class="text-caption text--secondary mb-3">
+                Update and finalize all connection paths
+                <br><code class="text-primary">updatePaths()</code>
               </div>
-            </v-stepper-content>
+              
+              <v-btn
+                color="success"
+                @click="updatePathsExample"
+                :disabled="shouldUpdatePaths === false"
+                elevation="2"
+                block
+              >
+                <v-icon small class="mr-1">mdi-refresh</v-icon>
+                Update Paths
+              </v-btn>
+            </v-card-text>
+          </v-card>
 
-            <v-stepper-step 
-              :complete="currentStep > 5" 
-              step="5"
-              :editable="false"
-            >
-              Import Scene
-              <small>Load external scene file</small>
-            </v-stepper-step>
-
-            <v-stepper-content step="5">
-              <div class="pa-1">
-                <v-alert
-                  color="info"
-                  border="left"
-                  colored-border
-                  dense
-                  class="mb-3"
-                >
-                  <div class="d-flex align-center">
-                    <v-icon small class="mr-2">mdi-import</v-icon>
-                    <span class="text-caption">Import a JSON scene file to load components and connections <br><br> importScene(jsonData)</span>
-                  </div>
-                </v-alert>
-                
-                <v-btn
-                  color="info"
-                  @click="executeStepAction(5)"
-                  elevation="2"
-                  block
-                >
-                  <v-icon small class="mr-1">mdi-import</v-icon>
-                  Import Scene File
-                </v-btn>
+          <!-- Import Scene Section -->
+          <v-card outlined class="mb-4">
+            <v-card-subtitle class="d-flex align-center">
+              <v-icon small class="mr-2" color="info">mdi-import</v-icon>
+              <span class="font-weight-medium">Import Scene</span>
+            </v-card-subtitle>
+            <v-card-text class="pt-2">
+              <div class="text-caption text--secondary mb-3">
+                Import a JSON scene file to load components and connections
+                <br><code class="text-primary">importScene(jsonData)</code>
               </div>
-            </v-stepper-content>
-          </v-stepper>
+              
+              <v-btn
+                color="info"
+                @click="openFileImport"
+                elevation="2"
+                block
+              >
+                <v-icon small class="mr-1">mdi-import</v-icon>
+                Import Scene File
+              </v-btn>
+            </v-card-text>
+          </v-card>
+
         </div>
         
       </v-card>
@@ -365,16 +317,6 @@ export default {
         text: '',
         color: 'info',
         timeout: 3000
-      },
-      
-      // Stepper state for sequential operations
-      currentStep: 1,
-      stepCompleted: {
-        1: false, // Add Component
-        2: false, // Translate Component  
-        3: false, // Add Connection
-        4: false, // Update Paths
-        5: false  // Import Scene
       },
     };
   },
@@ -715,60 +657,6 @@ export default {
         console.error('❌ Failed to initialize model preloading:', error)      
       } finally {
         this.isPreloadingModels = false
-      }
-    },
-
-    /**
-     * Execute the action for a specific step in the workflow
-     * @param {Number} step The step number to execute
-     */
-    executeStepAction(step) {
-      switch (step) {
-        case 1:
-          // Step 1: Add Connection
-          const connectionResult = this.addConnectionExample()
-          if (connectionResult) {
-            this.stepCompleted[1] = true
-            this.currentStep = 2
-            this.showSnackbar('Connection added! Now position components.', 'success')
-          }
-          break
-          
-        case 2:
-          // Step 2: Translate Component
-          this.translateComponentExample()
-          this.stepCompleted[2] = true
-          this.currentStep = 3
-          this.showSnackbar('Translation applied! Now update paths to finalize.', 'success')
-          break
-          
-        case 3:
-          // Step 3: Update Paths
-          this.updatePathsExample()
-          this.stepCompleted[3] = true
-          this.currentStep = 4
-          this.showSnackbar('Paths updated! Now add a new component.', 'success')
-          break
-          
-        case 4:
-          // Step 4: Add Component
-          const result = this.addComponentExample()
-          if (result) {
-            this.stepCompleted[4] = true
-            this.currentStep = 5
-            this.showSnackbar('Component added! Now you can import a scene file.', 'success')
-          }
-          break
-          
-        case 5:
-          // Step 5: Import Scene
-          this.openFileImport()
-          this.stepCompleted[5] = true
-          this.showSnackbar('Import dialog opened! Select a JSON scene file.', 'info')
-          break
-          
-        default:
-          console.warn('Unknown step:', step)
       }
     },
 
