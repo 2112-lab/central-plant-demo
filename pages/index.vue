@@ -100,7 +100,7 @@
               <span class="font-weight-medium">Add Component</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-3">
                 Add a new component to the scene with positioning options
                 <br><code class="text-primary">addComponent(libraryId, options)</code>
               </div>
@@ -137,7 +137,7 @@
               <span class="font-weight-medium">Translate Component</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-3">
                 Position your component as needed in the 3D scene
                 <br><code class="text-primary">translate(componentId, axis, value)</code>
               </div>
@@ -206,7 +206,7 @@
               <span class="font-weight-medium">Add Connection</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-3">
                 Connect components together to create flow paths
                 <br><code class="text-primary">addConnection(from, to)</code>
               </div>
@@ -231,7 +231,7 @@
               <span class="font-weight-medium">Update Paths</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-3">
                 Update and finalize all connection paths
                 <br><code class="text-primary">updatePaths()</code>
               </div>
@@ -256,7 +256,7 @@
               <span class="font-weight-medium">Import Scene</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-3">
                 Import a JSON scene file to load components and connections
                 <br><code class="text-primary">importScene(jsonData)</code>
               </div>
@@ -1158,5 +1158,15 @@ export default {
     font-family: "Rubik Mono One", monospace;
     font-weight: 100;
     font-style: normal;
+  }
+  
+  /* Slightly increase font size for card description text */
+  .card-description {
+    font-size: 14px !important;
+  }
+  
+  /* Style code elements within card descriptions */
+  .card-description code {
+    font-size: 14px !important;
   }
 </style>
