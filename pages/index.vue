@@ -154,10 +154,25 @@
                   </div>
                 </v-alert>
                 
+                <v-select
+                  v-model="selectedComponentIdForTranslation"
+                  :items="availableComponentIdsForTranslation"
+                  item-text="text"
+                  item-value="id"
+                  label="Select Component to Translate"
+                  prepend-icon="mdi-cube-outline"
+                  dense
+                  outlined
+                  class="mb-3"
+                  :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
+                  :hint="availableComponentIdsForTranslation.length === 0 ? 'No components available - add components first' : ''"
+                  persistent-hint
+                />
+                
                 <v-btn
                   color="success"
                   @click="executeStepAction(2)"
-                  :disabled="!sceneViewer || !centralPlant"
+                  :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForTranslation"
                   elevation="2"
                   block
                 >
@@ -341,6 +356,9 @@ export default {
         { id: 'COOLING-TOWER', name: 'COOLING-TOWER' }
       ],
       
+      // Component selection for translation
+      selectedComponentIdForTranslation: null,
+      
       // Snackbar notification state
       snackbar: {
         show: false,
@@ -359,6 +377,30 @@ export default {
         5: false  // Import Scene
       },
     };
+  },
+  
+  // Computed properties
+  computed: {
+    /**
+     * Get available component IDs for translation dropdown
+     * @returns {Array} Array of component ID objects with id and text properties
+     */
+    availableComponentIdsForTranslation() {
+      if (!this.centralPlant) {
+        return []
+      }
+      
+      try {
+        const componentIds = this.centralPlant.getComponentIds()
+        return componentIds.map(id => ({
+          id: id,
+          text: id
+        }))
+      } catch (error) {
+        console.warn('⚠️ Error getting component IDs:', error)
+        return []
+      }
+    }
   },
   
   // Watch for changes to reactive data properties
@@ -785,6 +827,15 @@ export default {
         try {
           await this.sceneViewer.loadSceneFromData(sceneData)
           console.log('✅ New scene loaded via Nuxt event')
+          
+          // Reset and auto-select first component for translation after scene loads
+          this.$nextTick(() => {
+            this.selectedComponentIdForTranslation = null
+            if (this.availableComponentIdsForTranslation.length > 0) {
+              this.selectedComponentIdForTranslation = this.availableComponentIdsForTranslation[0].id
+              console.log('🎯 Auto-selected component for translation after scene load:', this.selectedComponentIdForTranslation)
+            }
+          })
         } catch (error) {
           console.error('❌ Error loading new scene:', error)
         }
@@ -799,6 +850,9 @@ export default {
         try {
           this.sceneViewer.createEmptyScene()
           console.log('✅ New empty scene created via Nuxt event')
+          
+          // Reset translation component selection for new empty scene
+          this.selectedComponentIdForTranslation = null
         } catch (error) {
           console.error('❌ Error creating new scene:', error)
         }
@@ -866,6 +920,14 @@ export default {
           // Enable update paths button since we added a new component
           this.shouldUpdatePaths = true
           
+          // Auto-select the first available component for translation if none is selected
+          this.$nextTick(() => {
+            if (!this.selectedComponentIdForTranslation && this.availableComponentIdsForTranslation.length > 0) {
+              this.selectedComponentIdForTranslation = this.availableComponentIdsForTranslation[0].id
+              console.log('🎯 Auto-selected component for translation:', this.selectedComponentIdForTranslation)
+            }
+          })
+          
           return addedComponent
         } else {
           console.error('❌ Failed to add component - centralPlant.addComponent() returned null/undefined')
@@ -891,14 +953,29 @@ export default {
         return false
       }
 
-      // Hard-coded example of translate() param values
-      const componentId = 'COOLING-TOWER';
+      if (!this.selectedComponentIdForTranslation) {
+        console.error('❌ No component selected for translation')
+        this.showSnackbar('Please select a component to translate', 'warning')
+        return false
+      }
+
+      // Use the selected component ID from the dropdown
+      const componentId = this.selectedComponentIdForTranslation;
       const axis = 'x';
       const value = 2.5;
       
-      this.centralPlant.translate(componentId, axis, value)
-
-      this.shouldUpdatePaths = true;
+      try {
+        this.centralPlant.translate(componentId, axis, value)
+        console.log(`✅ Translated component ${componentId} on ${axis} axis by ${value}`)
+        this.showSnackbar(`Component ${componentId} translated successfully`, 'success')
+        
+        this.shouldUpdatePaths = true;
+        return true
+      } catch (error) {
+        console.error('❌ Error translating component:', error)
+        this.showSnackbar(`Error translating component: ${error.message}`, 'error')
+        return false
+      }
     },
 
     updatePathsExample() {        
@@ -983,6 +1060,30 @@ export default {
       }
       
       return connections
+    },
+
+    /**
+     * Example method demonstrating how to use the new getComponentIds API
+     * This method retrieves all component IDs from the scene
+     * @returns {Array} Array of component ID strings
+     */
+    getComponentIdsExample() {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        this.showSnackbar('CentralPlant not initialized', 'error')
+        return []
+      }
+
+      const componentIds = this.centralPlant.getComponentIds()
+      console.log('🔍 Current component IDs:', componentIds)
+      
+      if (componentIds.length > 0) {
+        this.showSnackbar(`Found ${componentIds.length} component IDs`, 'info')
+      } else {
+        this.showSnackbar('No components found', 'warning')
+      }
+      
+      return componentIds
     },
 
     /**
