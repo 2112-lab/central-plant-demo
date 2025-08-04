@@ -137,9 +137,12 @@
               <span class="font-weight-medium">Translate Component</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary">
                 Position your component as needed in the 3D scene
-                <br><code class="text-primary">translate(componentId, axis, value)</code>
+              </div>
+
+              <div class="card-description text-caption text--secondary mt-1">
+                <code class="text-primary">translate(componentId, axis, value)</code>
               </div>
               
               <v-select
@@ -153,6 +156,7 @@
                 outlined
                 :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
                 persistent-hint
+                class="mt-4"
               />
               
               <v-select
