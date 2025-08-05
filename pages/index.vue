@@ -103,6 +103,22 @@
         <v-card-title class="py-3">
           <v-icon class="mr-2">mdi-api</v-icon>
           <span class="text-h6">API Examples</span>
+          <v-spacer></v-spacer>
+          <a 
+            href="https://central-plant-api-docs.s3.us-east-1.amazonaws.com/v0.1.24/CentralPlant.html" 
+            target="_blank" 
+            class="text-decoration-none"
+          >
+            <v-btn 
+              small 
+              outlined 
+              color="primary"
+            >
+              <v-icon small class="mr-1">mdi-book-open-variant</v-icon>
+              Docs
+              <v-icon small class="ml-1">mdi-open-in-new</v-icon>
+            </v-btn>
+          </a>
         </v-card-title>
         
         <v-divider></v-divider>
@@ -882,7 +898,7 @@ export default {
     initializeCentralPlant() {
       if (!this.centralPlant) {
         // Initialize with a placeholder - the actual component instance will be set later
-        this.centralPlant = new CentralPlant(null)
+        this.centralPlant = new CentralPlant()
         console.log('🏗️ CentralPlant initialized from index.vue:', this.centralPlant)
       }
       return this.centralPlant
