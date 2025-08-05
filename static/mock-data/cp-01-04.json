@@ -1,27 +1,27 @@
 {
   "connections": [
     {
-      "from": "COOLING-TOWER-CONNECTOR-1",
+      "from": "COOLING-TOWER-1-CONNECTOR-1",
       "to": "PUMP-1-CONNECTOR-2"
     },
     {
-      "from": "COOLING-TOWER-CONNECTOR-1",
+      "from": "COOLING-TOWER-1-CONNECTOR-1",
       "to": "PUMP-2-CONNECTOR-2"
     },
     {
-      "from": "CHILLER-GROUP-1-CONNECTOR-2",
+      "from": "CHILLER-1-CONNECTOR-2",
       "to": "PUMP-1-CONNECTOR-1"
     },
     {
-      "from": "CHILLER-GROUP-1-CONNECTOR-2",
+      "from": "CHILLER-1-CONNECTOR-2",
       "to": "PUMP-2-CONNECTOR-1"
     },
     {
-      "from": "CHILLER-GROUP-2-CONNECTOR-1",
+      "from": "CHILLER-1-CONNECTOR-3",
       "to": "PUMP-3-CONNECTOR-2"
     },
     {
-      "from": "CHILLER-GROUP-2-CONNECTOR-1",
+      "from": "CHILLER-1-CONNECTOR-3",
       "to": "PUMP-4-CONNECTOR-2"
     },
     {
@@ -33,7 +33,7 @@
       "to": "UNKNOWN-CONNECTOR-1"
     },
     {
-      "from": "CHILLER-GROUP-2-CONNECTOR-2",
+      "from": "CHILLER-1-CONNECTOR-4",
       "to": "UNKNOWN-CONNECTOR-2"
     }
   ],
@@ -43,7 +43,7 @@
       "type": "Scene",
       "children": [
         {
-          "uuid": "COOLING-TOWER",
+          "uuid": "COOLING-TOWER-1",
           "type": "Mesh",
           "userData": {
             "libraryId": "COOLING-TOWER",
@@ -62,7 +62,7 @@
           },
           "children": [
             {
-              "uuid": "COOLING-TOWER-CONNECTOR-1",
+              "uuid": "COOLING-TOWER-1-CONNECTOR-1",
               "type": "Mesh",
               "userData": {
                 "direction": [
@@ -81,7 +81,7 @@
               "geometry": "CONNECTOR-GEO"
             },
             {
-              "uuid": "COOLING-TOWER-CONNECTOR-2",
+              "uuid": "COOLING-TOWER-1-CONNECTOR-2",
               "type": "Mesh",
               "userData": {
                 "direction": [
@@ -102,7 +102,7 @@
           ]
         },
         {
-          "uuid": "CHILLER",
+          "uuid": "CHILLER-1",
           "userData": {
             "libraryId": "CHILLER",
             "componentType": "component",
@@ -121,7 +121,7 @@
           "geometry": "CHILLER-GEO",
           "children": [
             {
-              "uuid": "CHILLER-GROUP-1-CONNECTOR-1",
+              "uuid": "CHILLER-1-CONNECTOR-1",
               "type": "Mesh",
               "userData": {
                 "group": "CHILLER-GROUP-1",
@@ -141,7 +141,7 @@
               "geometry": "CONNECTOR-GEO"
             },
             {
-              "uuid": "CHILLER-GROUP-1-CONNECTOR-2",
+              "uuid": "CHILLER-1-CONNECTOR-2",
               "type": "Mesh",
               "userData": {
                 "group": "CHILLER-GROUP-1",
@@ -161,7 +161,7 @@
               "geometry": "CONNECTOR-GEO"
             },
             {
-              "uuid": "CHILLER-GROUP-2-CONNECTOR-1",
+              "uuid": "CHILLER-1-CONNECTOR-3",
               "type": "Mesh",
               "userData": {
                 "group": "CHILLER-GROUP-2",
@@ -181,7 +181,7 @@
               "geometry": "CONNECTOR-GEO"
             },
             {
-              "uuid": "CHILLER-GROUP-2-CONNECTOR-2",
+              "uuid": "CHILLER-1-CONNECTOR-4",
               "type": "Mesh",
               "userData": {
                 "group": "CHILLER-GROUP-2",

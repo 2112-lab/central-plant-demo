@@ -100,9 +100,11 @@
               <span class="font-weight-medium">Add Component</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-2">
                 Add a new component to the scene with positioning options
-                <br><code class="text-primary">addComponent(libraryId, options)</code>
+              </div>
+              <div class="card-description text-caption text--secondary mb-3">
+                <code class="text-primary">addComponent(libraryId)</code>
               </div>
               
               <v-select
@@ -110,11 +112,11 @@
                 :items="availableLibraryIds"
                 item-text="name"
                 item-value="id"
-                label="Component Type"
+                label="libraryId"
                 prepend-icon="mdi-cube-outline"
                 dense
                 outlined
-                class="mb-3"
+                class="mt-4 mb-n3"
               />
               
               <v-btn
@@ -137,11 +139,11 @@
               <span class="font-weight-medium">Translate Component</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary">
+              <div class="card-description text-caption text--secondary mb-2">
                 Position your component as needed in the 3D scene
               </div>
 
-              <div class="card-description text-caption text--secondary mt-1">
+              <div class="card-description text-caption text--secondary mb-3">
                 <code class="text-primary">translate(componentId, axis, value)</code>
               </div>
               
@@ -150,13 +152,13 @@
                 :items="availableComponentIdsForTranslation"
                 item-text="text"
                 item-value="id"
-                label="Component"
+                label="componentId"
                 prepend-icon="mdi-cube-outline"
                 dense
                 outlined
                 :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
                 persistent-hint
-                class="mt-4"
+                class="mt-4 mb-n2"
               />
               
               <v-select
@@ -168,16 +170,17 @@
                 ]"
                 item-text="text"
                 item-value="value"
-                label="Axis"
+                label="axis"
                 prepend-icon="mdi-axis"
                 dense
                 outlined
                 :disabled="!sceneViewer || !centralPlant"
+                class="mb-n2"
               />
               
               <v-text-field
                 v-model.number="selectedValueForTranslation"
-                label="Value"
+                label="value"
                 type="number"
                 step="0.5"
                 prepend-icon="mdi-numeric"
@@ -210,15 +213,51 @@
               <span class="font-weight-medium">Add Connection</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-2">
                 Connect components together to create flow paths
-                <br><code class="text-primary">addConnection(from, to)</code>
               </div>
+              <div class="card-description text-caption text--secondary mb-3">
+                <code class="text-primary">addConnection(source, destination)</code>
+              </div>
+              
+              <div class="d-flex align-center mb-3 pa-2" style="background-color: #f5f5f5; border-radius: 4px;">
+                <v-icon small class="mr-2" color="info">mdi-information-outline</v-icon>
+                <span class="text-caption text--secondary">
+                  Available connections: {{ availableConnectorIds.length }}
+                </span>
+              </div>
+              
+              <v-select
+                v-model="selectedSourceConnector"
+                :items="availableConnectorIds"
+                item-text="text"
+                item-value="id"
+                label="source"
+                prepend-icon="mdi-connection"
+                dense
+                outlined
+                class="mt-4 mb-n3"
+                :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
+              />
+              
+              <v-select
+                v-model="selectedDestinationConnector"
+                :items="availableConnectorIds"
+                item-text="text"
+                item-value="id"
+                label="destination"
+                prepend-icon="mdi-connection"
+                dense
+                outlined
+                class="mb-3"
+                :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
+                :rules="[validateToConnector]"
+              />
               
               <v-btn
                 color="info"
                 @click="addConnectionExample"
-                :disabled="!sceneViewer || !centralPlant"
+                :disabled="!sceneViewer || !centralPlant || !selectedSourceConnector || !selectedDestinationConnector || selectedSourceConnector === selectedDestinationConnector"
                 elevation="2"
                 block
               >
@@ -235,15 +274,16 @@
               <span class="font-weight-medium">Update Paths</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-2">
                 Update and finalize all connection paths
-                <br><code class="text-primary">updatePaths()</code>
+              </div>
+              <div class="card-description text-caption text--secondary mb-3">
+                <code class="text-primary">updatePaths()</code>
               </div>
               
               <v-btn
                 color="success"
                 @click="updatePathsExample"
-                :disabled="shouldUpdatePaths === false"
                 elevation="2"
                 block
               >
@@ -260,9 +300,11 @@
               <span class="font-weight-medium">Import Scene</span>
             </v-card-subtitle>
             <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-3">
+              <div class="card-description text-caption text--secondary mb-2">
                 Import a JSON scene file to load components and connections
-                <br><code class="text-primary">importScene(jsonData)</code>
+              </div>
+              <div class="card-description text-caption text--secondary mb-3">
+                <code class="text-primary">importScene(jsonData)</code>
               </div>
               
               <v-btn
@@ -342,9 +384,13 @@ export default {
       ],
       
       // Component selection for translation
-      selectedComponentIdForTranslation: null,
+      selectedComponentIdForTranslation: 'COOLING-TOWER',
       selectedAxisForTranslation: 'x',
       selectedValueForTranslation: 2.5,
+      
+      // Connection selection for adding new connections
+      selectedSourceConnector: null,
+      selectedDestinationConnector: null,
       
       // Snackbar notification state
       snackbar: {
@@ -375,6 +421,27 @@ export default {
         }))
       } catch (error) {
         console.warn('⚠️ Error getting component IDs:', error)
+        return []
+      }
+    },
+    
+    /**
+     * Get available connector IDs for connection dropdown
+     * @returns {Array} Array of connector ID objects with id and text properties
+     */
+    availableConnectorIds() {
+      if (!this.centralPlant) {
+        return []
+      }
+      
+      try {
+        const connectorIds = this.centralPlant.getAvailableConnections()
+        return connectorIds.map(id => ({
+          id: id,
+          text: id
+        }))
+      } catch (error) {
+        console.warn('⚠️ Error getting available connections:', error)
         return []
       }
     }
@@ -820,6 +887,37 @@ export default {
     },
 
     /**
+     * Validate that the "from" connector is not the same as the "to" connector
+     * @param {string} value The selected "from" connector value
+     * @returns {boolean|string} True if valid, error message if invalid
+     */
+    validateFromConnector(value) {
+      if (!value) {
+        return 'From connector is required'
+      }
+      
+      if (value === this.selectedDestinationConnector) {
+        return 'Source and destination connectors cannot be the same'
+      }
+      
+      return true
+    },
+
+    /**
+     * Validate that the "to" connector is not the same as the "from" connector
+     * @param {string} value The selected "to" connector value
+     * @returns {boolean|string} True if valid, error message if invalid
+     */
+    validateToConnector(value) {
+      
+      if (value === this.selectedSourceConnector) {
+        return 'Source and destination connectors cannot be the same'
+      }
+      
+      return true
+    },
+
+    /**
      * Example method demonstrating how to use the centralPlant.addComponent() API
      * This method adds a component with the selected libraryId to the scene
      * @returns {Object|false} The added component object if successful, false otherwise
@@ -851,7 +949,7 @@ export default {
           }
         }
         // Add the component using the centralPlant.addComponent() API
-        const addedComponent = this.centralPlant.addComponent(this.selectedLibraryId, options)
+        const addedComponent = this.centralPlant.addComponent(this.selectedLibraryId)
         
         if (addedComponent) {
           console.log('✅ Component added successfully:', {
@@ -946,16 +1044,28 @@ export default {
         return false
       }
 
-      try {
-        // Example connection between a cooling tower and pump connector
-        const fromConnectorId = 'COOLING-TOWER-CONNECTOR-2'
-        const toConnectorId = 'CHILLER-GROUP-1-CONNECTOR-1'
+      if (!this.selectedSourceConnector) {
+        console.error('❌ No "from" connector selected')
+        this.showSnackbar('Please select a "from" connector', 'warning')
+        return false
+      }
 
-        const componentId = 'COOLING-TOWER';
-        const axis = 'x';
-        const value = 0;
-        
-        this.centralPlant.translate(componentId, axis, value)
+      if (!this.selectedDestinationConnector) {
+        console.error('❌ No "to" connector selected')
+        this.showSnackbar('Please select a "to" connector', 'warning')
+        return false
+      }
+
+      if (this.selectedSourceConnector === this.selectedDestinationConnector) {
+        console.error('❌ Cannot connect a connector to itself')
+        this.showSnackbar('Cannot connect a connector to itself', 'warning')
+        return false
+      }
+
+      try {
+        // Use the selected connector IDs from the dropdowns
+        const fromConnectorId = this.selectedSourceConnector
+        const toConnectorId = this.selectedDestinationConnector
         
         // Add the connection using the centralPlant.addConnection() API
         const addedConnection = this.centralPlant.addConnection(fromConnectorId, toConnectorId)
@@ -972,6 +1082,10 @@ export default {
           
           // Reset update paths flag since we already updated
           this.shouldUpdatePaths = false
+          
+          // Clear the selections after successful connection
+          this.selectedSourceConnector = null
+          this.selectedDestinationConnector = null
           
           return addedConnection
         } else {
@@ -1007,6 +1121,30 @@ export default {
       }
       
       return connections
+    },
+
+    /**
+     * Example method demonstrating how to use the new getAvailableConnections API
+     * This method retrieves all connector IDs that are not currently used in connections
+     * @returns {Array} Array of available connector ID strings
+     */
+    getAvailableConnectionsExample() {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        this.showSnackbar('CentralPlant not initialized', 'error')
+        return []
+      }
+
+      const availableConnectors = this.centralPlant.getAvailableConnections()
+      console.log('🔍 Available connector IDs:', availableConnectors)
+      
+      if (availableConnectors.length > 0) {
+        this.showSnackbar(`Found ${availableConnectors.length} available connectors`, 'info')
+      } else {
+        this.showSnackbar('No available connectors found', 'warning')
+      }
+      
+      return availableConnectors
     },
 
     /**
