@@ -19,7 +19,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-          <v-card-text>
+          <v-card-text class="pb-0">
           <v-file-input
             v-model="selectedFile"
             label="Select JSON file"
@@ -31,8 +31,25 @@
             clearable
             :error-messages="fileErrorMessage"
             show-size
-            style="margin-bottom: 0;"
+            class="mt-2"
           />
+          <div class="text-center">
+            <a 
+              href="https://drive.google.com/drive/u/0/folders/1EL6EWRr10p6Y6-vlU4qYAawyn6Ck9J5R" 
+              target="_blank" 
+              class="text-decoration-none"
+            >
+              <v-btn 
+                small 
+                outlined 
+                color="primary"
+              >
+                <v-icon small class="mr-1">mdi-folder-open</v-icon>
+                Json Files
+                <v-icon small class="ml-1">mdi-open-in-new</v-icon>
+              </v-btn>
+            </a>
+          </div>
         </v-card-text>
         
         <v-card-actions>
