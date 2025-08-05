@@ -268,7 +268,6 @@
                 outlined
                 class="mb-3"
                 :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
-                :rules="[validateToConnector]"
               />
               
               <v-btn
@@ -898,37 +897,6 @@ export default {
       // Check if the value is a multiple of 0.5
       if ((numValue * 2) % 1 !== 0) {
         return 'Value must be a multiple of 0.5 (e.g., 0.5, 1.0, 1.5, 2.0, etc.)'
-      }
-      
-      return true
-    },
-
-    /**
-     * Validate that the "from" connector is not the same as the "to" connector
-     * @param {string} value The selected "from" connector value
-     * @returns {boolean|string} True if valid, error message if invalid
-     */
-    validateFromConnector(value) {
-      if (!value) {
-        return 'From connector is required'
-      }
-      
-      if (value === this.selectedDestinationConnector) {
-        return 'Source and destination connectors cannot be the same'
-      }
-      
-      return true
-    },
-
-    /**
-     * Validate that the "to" connector is not the same as the "from" connector
-     * @param {string} value The selected "to" connector value
-     * @returns {boolean|string} True if valid, error message if invalid
-     */
-    validateToConnector(value) {
-      
-      if (value === this.selectedSourceConnector) {
-        return 'Source and destination connectors cannot be the same'
       }
       
       return true
