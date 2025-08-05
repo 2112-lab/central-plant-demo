@@ -112,227 +112,272 @@
           
           <!-- Add Component Section -->
           <v-card outlined class="mb-4">
-            <v-card-subtitle class="d-flex align-center">
+            <v-card-subtitle 
+              class="d-flex align-center cursor-pointer" 
+              @click="expandedSections.addComponent = !expandedSections.addComponent"
+            >
               <v-icon small class="mr-2" color="primary">mdi-plus</v-icon>
               <span class="font-weight-medium">Add Component</span>
+              <v-spacer></v-spacer>
+              <v-icon :class="{ 'rotate-180': expandedSections.addComponent }">
+                mdi-chevron-down
+              </v-icon>
             </v-card-subtitle>
-            <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-2">
-                Add a new component to the scene with positioning options
-              </div>
-              <div class="card-description text-caption text--secondary mb-3">
-                <code class="text-primary">addComponent(libraryId)</code>
-              </div>
-              
-              <v-select
-                v-model="selectedLibraryId"
-                :items="availableLibraryIds"
-                item-text="name"
-                item-value="id"
-                label="libraryId"
-                prepend-icon="mdi-cube-outline"
-                dense
-                outlined
-                class="mt-4 mb-n3"
-              />
-              
-              <v-btn
-                color="primary"
-                @click="addComponentExample"
-                :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
-                elevation="2"
-                block
-              >
-                <v-icon small class="mr-1">mdi-plus</v-icon>
-                Add Component
-              </v-btn>
-            </v-card-text>
+            <v-expand-transition>
+              <v-card-text v-show="expandedSections.addComponent" class="pt-2">
+                <div class="card-description text-caption text--secondary mb-2">
+                  Add a new component to the scene with positioning options
+                </div>
+                <div class="card-description text-caption text--secondary mb-3">
+                  <code class="text-primary">addComponent(libraryId)</code>
+                </div>
+                
+                <v-select
+                  v-model="selectedLibraryId"
+                  :items="availableLibraryIds"
+                  item-text="name"
+                  item-value="id"
+                  label="libraryId"
+                  prepend-icon="mdi-cube-outline"
+                  dense
+                  outlined
+                  class="mt-4 mb-n3"
+                />
+                
+                <v-btn
+                  color="primary"
+                  @click="addComponentExample"
+                  :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-plus</v-icon>
+                  Add Component
+                </v-btn>
+              </v-card-text>
+            </v-expand-transition>
           </v-card>
 
           <!-- Translate Component Section -->
           <v-card outlined class="mb-4">
-            <v-card-subtitle class="d-flex align-center">
+            <v-card-subtitle 
+              class="d-flex align-center cursor-pointer" 
+              @click="expandedSections.translateComponent = !expandedSections.translateComponent"
+            >
               <v-icon small class="mr-2" color="success">mdi-axis-arrow</v-icon>
               <span class="font-weight-medium">Translate Component</span>
+              <v-spacer></v-spacer>
+              <v-icon :class="{ 'rotate-180': expandedSections.translateComponent }">
+                mdi-chevron-down
+              </v-icon>
             </v-card-subtitle>
-            <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-2">
-                Position your component as needed in the 3D scene
-              </div>
+            <v-expand-transition>
+              <v-card-text v-show="expandedSections.translateComponent" class="pt-2">
+                <div class="card-description text-caption text--secondary mb-2">
+                  Position your component as needed in the 3D scene
+                </div>
 
-              <div class="card-description text-caption text--secondary mb-3">
-                <code class="text-primary">translate(componentId, axis, value)</code>
-              </div>
-              
-              <v-select
-                v-model="selectedComponentIdForTranslation"
-                :items="availableComponentIdsForTranslation"
-                item-text="text"
-                item-value="id"
-                label="componentId"
-                prepend-icon="mdi-cube-outline"
-                dense
-                outlined
-                :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
-                persistent-hint
-                class="mt-4 mb-n2"
-              />
-              
-              <v-select
-                v-model="selectedAxisForTranslation"
-                :items="[
-                  { text: 'x', value: 'x' },
-                  { text: 'y', value: 'y' },
-                  { text: 'z', value: 'z' }
-                ]"
-                item-text="text"
-                item-value="value"
-                label="axis"
-                prepend-icon="mdi-axis"
-                dense
-                outlined
-                :disabled="!sceneViewer || !centralPlant"
-                class="mb-n2"
-              />
-              
-              <v-text-field
-                v-model.number="selectedValueForTranslation"
-                label="value"
-                type="number"
-                step="0.5"
-                prepend-icon="mdi-numeric"
-                dense
-                outlined
-                :disabled="!sceneViewer || !centralPlant"
-                :rules="[validateMultipleOfHalf]"
-                hint="Translation distance in 3D units (must be multiple of 0.5)"
-                class="mb-2"
-                persistent-hint
-              />
-              
-              <v-btn
-                color="success"
-                @click="translateComponentExample"
-                :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForTranslation"
-                elevation="2"
-                block
-              >
-                <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
-                Apply Translation
-              </v-btn>
-            </v-card-text>
+                <div class="card-description text-caption text--secondary mb-3">
+                  <code class="text-primary">translate(componentId, axis, value)</code>
+                </div>
+                
+                <v-select
+                  v-model="selectedComponentIdForTranslation"
+                  :items="availableComponentIdsForTranslation"
+                  item-text="text"
+                  item-value="id"
+                  label="componentId"
+                  prepend-icon="mdi-cube-outline"
+                  dense
+                  outlined
+                  :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
+                  persistent-hint
+                  class="mt-4 mb-n2"
+                />
+                
+                <v-select
+                  v-model="selectedAxisForTranslation"
+                  :items="[
+                    { text: 'x', value: 'x' },
+                    { text: 'y', value: 'y' },
+                    { text: 'z', value: 'z' }
+                  ]"
+                  item-text="text"
+                  item-value="value"
+                  label="axis"
+                  prepend-icon="mdi-axis"
+                  dense
+                  outlined
+                  :disabled="!sceneViewer || !centralPlant"
+                  class="mb-n2"
+                />
+                
+                <v-text-field
+                  v-model.number="selectedValueForTranslation"
+                  label="value"
+                  type="number"
+                  step="0.5"
+                  prepend-icon="mdi-numeric"
+                  dense
+                  outlined
+                  :disabled="!sceneViewer || !centralPlant"
+                  :rules="[validateMultipleOfHalf]"
+                  hint="Translation distance in 3D units (must be multiple of 0.5)"
+                  class="mb-2"
+                  persistent-hint
+                />
+                
+                <v-btn
+                  color="success"
+                  @click="translateComponentExample"
+                  :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForTranslation"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
+                  Apply Translation
+                </v-btn>
+              </v-card-text>
+            </v-expand-transition>
           </v-card>
 
           <!-- Add Connection Section -->
           <v-card outlined class="mb-4">
-            <v-card-subtitle class="d-flex align-center">
+            <v-card-subtitle 
+              class="d-flex align-center cursor-pointer" 
+              @click="expandedSections.addConnection = !expandedSections.addConnection"
+            >
               <v-icon small class="mr-2" color="info">mdi-connection</v-icon>
               <span class="font-weight-medium">Add Connection</span>
+              <v-spacer></v-spacer>
+              <v-icon :class="{ 'rotate-180': expandedSections.addConnection }">
+                mdi-chevron-down
+              </v-icon>
             </v-card-subtitle>
-            <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-2">
-                Connect components together to create flow paths
-              </div>
-              <div class="card-description text-caption text--secondary mb-3">
-                <code class="text-primary">addConnection(source, destination)</code>
-              </div>
-              
-              <div class="d-flex align-center mb-3 pa-2" style="background-color: #f5f5f5; border-radius: 4px;">
-                <v-icon small class="mr-2" color="info">mdi-information-outline</v-icon>
-                <span class="text-caption text--secondary">
-                  Available connections: {{ availableConnectorIds.length }}
-                </span>
-              </div>
-              
-              <v-select
-                v-model="selectedSourceConnector"
-                :items="availableConnectorIds"
-                item-text="text"
-                item-value="id"
-                label="source"
-                prepend-icon="mdi-connection"
-                dense
-                outlined
-                class="mt-4 mb-n3"
-                :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
-              />
-              
-              <v-select
-                v-model="selectedDestinationConnector"
-                :items="availableConnectorIds"
-                item-text="text"
-                item-value="id"
-                label="destination"
-                prepend-icon="mdi-connection"
-                dense
-                outlined
-                class="mb-3"
-                :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
-              />
-              
-              <v-btn
-                color="info"
-                @click="addConnectionExample"
-                :disabled="!sceneViewer || !centralPlant || !selectedSourceConnector || !selectedDestinationConnector || selectedSourceConnector === selectedDestinationConnector"
-                elevation="2"
-                block
-              >
-                <v-icon small class="mr-1">mdi-connection</v-icon>
-                Add Connection
-              </v-btn>
-            </v-card-text>
+            <v-expand-transition>
+              <v-card-text v-show="expandedSections.addConnection" class="pt-2">
+                <div class="card-description text-caption text--secondary mb-2">
+                  Connect components together to create flow paths
+                </div>
+                <div class="card-description text-caption text--secondary mb-3">
+                  <code class="text-primary">addConnection(source, destination)</code>
+                </div>
+                
+                <div class="d-flex align-center mb-3 pa-2" style="background-color: #f5f5f5; border-radius: 4px;">
+                  <v-icon small class="mr-2" color="info">mdi-information-outline</v-icon>
+                  <span class="text-caption text--secondary">
+                    Available connections: {{ availableConnectorIds.length }}
+                  </span>
+                </div>
+                
+                <v-select
+                  v-model="selectedSourceConnector"
+                  :items="availableConnectorIds"
+                  item-text="text"
+                  item-value="id"
+                  label="source"
+                  prepend-icon="mdi-connection"
+                  dense
+                  outlined
+                  class="mt-4 mb-n3"
+                  :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
+                />
+                
+                <v-select
+                  v-model="selectedDestinationConnector"
+                  :items="availableConnectorIds"
+                  item-text="text"
+                  item-value="id"
+                  label="destination"
+                  prepend-icon="mdi-connection"
+                  dense
+                  outlined
+                  class="mb-3"
+                  :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
+                />
+                
+                <v-btn
+                  color="info"
+                  @click="addConnectionExample"
+                  :disabled="!sceneViewer || !centralPlant || !selectedSourceConnector || !selectedDestinationConnector || selectedSourceConnector === selectedDestinationConnector"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-connection</v-icon>
+                  Add Connection
+                </v-btn>
+              </v-card-text>
+            </v-expand-transition>
           </v-card>
 
           <!-- Update Paths Section -->
           <v-card outlined class="mb-4">
-            <v-card-subtitle class="d-flex align-center">
+            <v-card-subtitle 
+              class="d-flex align-center cursor-pointer" 
+              @click="expandedSections.updatePaths = !expandedSections.updatePaths"
+            >
               <v-icon small class="mr-2" color="success">mdi-refresh</v-icon>
               <span class="font-weight-medium">Update Paths</span>
+              <v-spacer></v-spacer>
+              <v-icon :class="{ 'rotate-180': expandedSections.updatePaths }">
+                mdi-chevron-down
+              </v-icon>
             </v-card-subtitle>
-            <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-2">
-                Update and finalize all connection paths
-              </div>
-              <div class="card-description text-caption text--secondary mb-3">
-                <code class="text-primary">updatePaths()</code>
-              </div>
-              
-              <v-btn
-                color="success"
-                @click="updatePathsExample"
-                elevation="2"
-                block
-              >
-                <v-icon small class="mr-1">mdi-refresh</v-icon>
-                Update Paths
-              </v-btn>
-            </v-card-text>
+            <v-expand-transition>
+              <v-card-text v-show="expandedSections.updatePaths" class="pt-2">
+                <div class="card-description text-caption text--secondary mb-2">
+                  Update and finalize all connection paths
+                </div>
+                <div class="card-description text-caption text--secondary mb-3">
+                  <code class="text-primary">updatePaths()</code>
+                </div>
+                
+                <v-btn
+                  color="success"
+                  @click="updatePathsExample"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-refresh</v-icon>
+                  Update Paths
+                </v-btn>
+              </v-card-text>
+            </v-expand-transition>
           </v-card>
 
           <!-- Import Scene Section -->
           <v-card outlined class="mb-4">
-            <v-card-subtitle class="d-flex align-center">
+            <v-card-subtitle 
+              class="d-flex align-center cursor-pointer" 
+              @click="expandedSections.importScene = !expandedSections.importScene"
+            >
               <v-icon small class="mr-2" color="info">mdi-import</v-icon>
               <span class="font-weight-medium">Import Scene</span>
+              <v-spacer></v-spacer>
+              <v-icon :class="{ 'rotate-180': expandedSections.importScene }">
+                mdi-chevron-down
+              </v-icon>
             </v-card-subtitle>
-            <v-card-text class="pt-2">
-              <div class="card-description text-caption text--secondary mb-2">
-                Import a JSON scene file to load components and connections
-              </div>
-              <div class="card-description text-caption text--secondary mb-3">
-                <code class="text-primary">importScene(jsonData)</code>
-              </div>
-              
-              <v-btn
-                color="info"
-                @click="openFileImport"
-                elevation="2"
-                block
-              >
-                <v-icon small class="mr-1">mdi-import</v-icon>
-                Import Scene File
-              </v-btn>
-            </v-card-text>
+            <v-expand-transition>
+              <v-card-text v-show="expandedSections.importScene" class="pt-2">
+                <div class="card-description text-caption text--secondary mb-2">
+                  Import a JSON scene file to load components and connections
+                </div>
+                <div class="card-description text-caption text--secondary mb-3">
+                  <code class="text-primary">importScene(jsonData)</code>
+                </div>
+                
+                <v-btn
+                  color="info"
+                  @click="openFileImport"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-import</v-icon>
+                  Import Scene File
+                </v-btn>
+              </v-card-text>
+            </v-expand-transition>
           </v-card>
 
         </div>
@@ -378,6 +423,15 @@ export default {
       selectedFile: null,          // Currently selected file for import
       showFileImport: false,       // Whether to show the file import UI
       fileErrorMessage: null,      // Error message for file validation
+      
+      // Collapsible sections state
+      expandedSections: {
+        addComponent: true,
+        translateComponent: false,
+        addConnection: false,
+        updatePaths: false,
+        importScene: false
+      },
       
       // Scene connections data
       currentSceneConnections: [],    // Current scene connections data for the connections tab
@@ -1251,5 +1305,21 @@ export default {
   /* Style code elements within card descriptions */
   .card-description code {
     font-size: 14px !important;
+  }
+  
+  /* Cursor pointer for clickable sections */
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  /* Rotate transition for chevron icons */
+  .rotate-180 {
+    transform: rotate(180deg);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  /* Smooth transition for non-rotated state */
+  .v-icon {
+    transition: transform 0.2s ease-in-out;
   }
 </style>
