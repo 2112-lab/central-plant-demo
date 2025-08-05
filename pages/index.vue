@@ -573,29 +573,6 @@ export default {
           if (this.centralPlant) {
             this.centralPlant.setImportedSceneData(jsonData);
             console.log('✅ Complete scene data stored in centralPlant');
-            
-            // Update import metadata with file information
-            this.centralPlant.updateMetadataCategory('lastImport', {
-              importInfo: {
-                ...this.centralPlant.getMetadata('lastImport')?.importInfo,
-                originalFileName: this.selectedFile.name,
-                fileSize: this.selectedFile.size,
-                importTimestamp: new Date().toISOString()
-              }
-            });
-            
-            // Store additional import metadata for backward compatibility
-            this.centralPlant.setMetadata('fileImportHistory', [
-              ...(this.centralPlant.getMetadata('fileImportHistory') || []),
-              {
-                fileName: this.selectedFile.name,
-                fileSize: this.selectedFile.size,
-                timestamp: new Date().toISOString(),
-                connectionsCount: jsonData.connections?.length || 0,
-                componentsCount: jsonData.scene?.object?.children?.length || 0,
-                importMethod: 'file-upload'
-              }
-            ]);
           }
           
           // Emit event to SceneViewer to reload with new data
@@ -647,27 +624,6 @@ export default {
           if (this.centralPlant) {
             this.centralPlant.setImportedSceneData(jsonData);
             console.log('✅ Complete generated scene data stored in centralPlant');
-            
-            // Update import metadata with generation information
-            this.centralPlant.updateMetadataCategory('lastImport', {
-              importInfo: {
-                ...this.centralPlant.getMetadata('lastImport')?.importInfo,
-                sourceType: 'generated',
-                importTimestamp: new Date().toISOString()
-              }
-            });
-            
-            // Store additional import metadata for backward compatibility
-            this.centralPlant.setMetadata('fileImportHistory', [
-              ...(this.centralPlant.getMetadata('fileImportHistory') || []),
-              {
-                sourceType: 'generated',
-                timestamp: new Date().toISOString(),
-                connectionsCount: jsonData.connections?.length || 0,
-                componentsCount: jsonData.scene?.object?.children?.length || 0,
-                importMethod: 'tabinspect-generation'
-              }
-            ]);
           }
           
           // Emit event to SceneViewer to reload with new data
