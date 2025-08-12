@@ -2,74 +2,14 @@
 <!-- Main application container with light background -->
   <v-app id="appContainer" style="background-color:#f5f5f5;">     
     
-    <!-- Import Scene File Dialog -->
-    <v-dialog 
-      v-model="showFileImport" 
-      max-width="500px"
-      persistent
-    >
-      <v-card>
-        <v-card-title class="text-h6">
-          Import Scene File
-          <v-spacer></v-spacer>
-          <v-btn 
-            icon 
-            @click="showFileImport = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-card-title>
-          <v-card-text class="pb-0">
-          <v-file-input
-            v-model="selectedFile"
-            label="Select JSON file"
-            accept=".json"
-            prepend-icon="mdi-file-document-outline"
-            @change="handleJsonFileImport"
-            outlined
-            dense
-            clearable
-            :error-messages="fileErrorMessage"
-            show-size
-            class="mt-2"
-          />
-          <div class="text-center">
-            <a 
-              href="https://drive.google.com/drive/u/0/folders/1EL6EWRr10p6Y6-vlU4qYAawyn6Ck9J5R" 
-              target="_blank" 
-              class="text-decoration-none"
-            >
-              <v-btn 
-                small 
-                outlined 
-                color="primary"
-              >
-                <v-icon small class="mr-1">mdi-folder-open</v-icon>
-                Json Files
-                <v-icon small class="ml-1">mdi-open-in-new</v-icon>
-              </v-btn>
-            </a>
-          </div>
-        </v-card-text>
-        
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn 
-            text 
-            @click="showFileImport = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn 
-            color="primary" 
-            :disabled="!selectedFile"
-            @click="processSelectedFile"
-          >
-            Import
-          </v-btn>        
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <!-- Hidden file input for direct file picking -->
+    <input 
+      ref="fileInput"
+      type="file" 
+      accept=".json"
+      @change="handleDirectFileImport"
+      style="display: none;"
+    />
     
     <!-- <v-btn
       color="primary"
@@ -110,12 +50,26 @@
             class="text-decoration-none"
           >
             <v-btn 
-              small 
+              x-small 
+              outlined 
+              color="primary"
+              class="mr-2"
+            >
+              Docs
+              <v-icon small class="ml-1">mdi-open-in-new</v-icon>
+            </v-btn>
+          </a>
+          <a 
+            href="https://drive.google.com/drive/u/0/folders/1EL6EWRr10p6Y6-vlU4qYAawyn6Ck9J5R" 
+            target="_blank" 
+            class="text-decoration-none"
+          >
+            <v-btn 
+              x-small 
               outlined 
               color="primary"
             >
-              <v-icon small class="mr-1">mdi-book-open-variant</v-icon>
-              Docs
+              Samples
               <v-icon small class="ml-1">mdi-open-in-new</v-icon>
             </v-btn>
           </a>
@@ -436,10 +390,6 @@ export default {
       
       navbarHeight: 64,       // Height of the top navigation bar
       
-      selectedFile: null,          // Currently selected file for import
-      showFileImport: false,       // Whether to show the file import UI
-      fileErrorMessage: null,      // Error message for file validation
-      
       // Collapsible sections state
       expandedSections: {
         addComponent: true,
@@ -588,47 +538,20 @@ export default {
 
     openFileImport() {
       console.log("openFileImport started");
-      this.showFileImport = true;
+      // Directly trigger the file input
+      this.$refs.fileInput.click();
     },
     
-    // Show the file import dialog
-    showFileImportDialog() {
-      this.selectedFile = null;
-      this.fileErrorMessage = null;
-      this.showFileImport = true;
-    },      
-    // Handle JSON file import
-    async handleJsonFileImport(file) {
-      this.fileErrorMessage = null;
+    // Handle direct file import from hidden input
+    async handleDirectFileImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
       
-      if (!file) {
-        this.selectedFile = null;
-        return;
-      }
-      
-      // Just validate the file when selected, don't process it yet
       try {
         const text = await this.readFileAsText(file);
         const jsonData = JSON.parse(text);
         
         // Validate that it's a central-plant-compatible JSON
-        if (!this.validateCentralPlantJson(jsonData)) {
-          this.fileErrorMessage = 'Invalid central-plant JSON format. Please select a valid scene file.';
-        }
-      } catch (error) {
-        console.error('Error reading/parsing JSON file:', error);
-        this.fileErrorMessage = 'Error reading or parsing the JSON file. Please check the file format.';
-      }
-    },
-    
-    // Process the selected file (called when Import button is clicked)
-    async processSelectedFile() {
-      if (!this.selectedFile) return;
-      
-      try {
-        const text = await this.readFileAsText(this.selectedFile);
-        const jsonData = JSON.parse(text);
-          // Validate that it's a central-plant-compatible JSON
         if (this.validateCentralPlantJson(jsonData)) {
           // Load connections data if present
           if (jsonData.connections && Array.isArray(jsonData.connections)) {
@@ -648,28 +571,27 @@ export default {
           // Emit event to SceneViewer to reload with new data
           this.$nuxt.$emit('loadNewScene', jsonData);
           
-          // Hide the import dialog on success
-          this.showFileImport = false;
-          this.selectedFile = null;
-          this.fileErrorMessage = null;
-          
           // Show success message
           this.showSnackbar('Scene and connections loaded successfully!', 'success');
           
-          // Show success message (optional)
-          this.$nextTick(() => {
-            // You could add a success toast/snackbar here if desired
-            console.log('Scene loaded successfully');
-          });
+          console.log('Scene loaded successfully');
         } else {
-          this.fileErrorMessage = 'Invalid central-plant JSON format. Please select a valid scene file.';
+          this.showSnackbar('Invalid central-plant JSON format. Please select a valid scene file.', 'error');
         }
       } catch (error) {
         console.error('Error reading/parsing JSON file:', error);
-        this.fileErrorMessage = 'Error reading or parsing the JSON file. Please check the file format.';
+        this.showSnackbar('Error reading or parsing the JSON file. Please check the file format.', 'error');
       }
+      
+      // Clear the input for next use
+      event.target.value = '';
     },
     
+    // Show the file import dialog
+    showFileImportDialog() {
+      // This method is no longer needed but kept for backward compatibility
+      this.openFileImport();
+    },      
     // Load Central Plant JSON data from TabInspect (generated from gen-item)
     async loadCentralPlantJson(jsonData) {
       if (!jsonData) {
