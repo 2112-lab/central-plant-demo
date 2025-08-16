@@ -10,7 +10,7 @@
     "cp": "npm install @2112-lab/central-plant@latest"
   },
   "dependencies": {
-    "@2112-lab/central-plant": "^0.1.25",
+    "@2112-lab/central-plant": "^0.1.26",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/dotenv": "^1.4.2",
     "@nuxtjs/vuetify": "^1.12.3",

@@ -91,6 +91,4 @@ sw.*
 # Vim swap files
 *.swp
 
-central-plant
-
 .github
