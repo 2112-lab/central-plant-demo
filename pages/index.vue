@@ -17,7 +17,7 @@
       <!-- App title with link to home -->
       <v-toolbar-title>
         <router-link to="/" style="text-decoration: none; color: inherit;">
-          <span class="rubik-mono-one-regular">Central-Plant Demo</span>
+          <span class="rubik-mono-one-regular">Central Plant Demo</span>
         </router-link>
       </v-toolbar-title>
 

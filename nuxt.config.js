@@ -15,7 +15,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'central-plant-app',
+    title: 'Central Plant Demo',
     htmlAttrs: {
       lang: 'en'
     },
