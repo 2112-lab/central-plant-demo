@@ -2,6 +2,27 @@
 <!-- Main application container with light background -->
   <v-app id="appContainer" style="background-color:#f5f5f5;">     
     
+    <!-- Top navigation bar -->
+    <v-app-bar 
+      color="#fff"
+      style="
+        font-family:'Amazon Ember', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; 
+        position:relative; 
+        z-index:1; 
+        height: 64px !important; 
+        min-height: 64px !important; 
+        max-height: 64px !important;
+      "
+    >
+      <!-- App title with link to home -->
+      <v-toolbar-title>
+        <router-link to="/" style="text-decoration: none; color: inherit;">
+          <span class="rubik-mono-one-regular">Central-Plant Demo</span>
+        </router-link>
+      </v-toolbar-title>
+
+    </v-app-bar>
+    
     <!-- Hidden file input for direct file picking -->
     <input 
       ref="fileInput"
@@ -10,31 +31,20 @@
       @change="handleDirectFileImport"
       style="display: none;"
     />
-    
-    <!-- <v-btn
-      color="primary"
-      class="mb-n4"
-      @click="openFileImport"
-      style="position:absolute; left:10px; top:10px; z-index:99; background:white"
-      elevation="4"
-    >
-      <v-icon small class="mr-1">mdi-import</v-icon>
-      Import
-    </v-btn> -->
 
     <!-- Main content area - flexible layout with primary viewport and right sidebar -->    
-    <div style="display: flex; height: calc(100vh); width: 100%; overflow: hidden;">      
+    <div style="display: flex; width: 100%; overflow: hidden; margin-top: 64px;">      
       <div 
         id="scene-container" 
         ref="sceneContainer"
-        style="position:absolute; top:20px; left:20px; right:420px; bottom:20px; box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12)"
+        style="position:absolute; top:84px; left:20px; right:420px; bottom:20px; box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12)"
       >
         <!-- Scene content will be rendered here -->
       </div>   
     </div>    
 
     <!-- API Examples Panel - Right Sidebar -->
-    <div style="position: fixed; top: 20px; right: 20px; bottom: 20px; width: 380px; z-index: 100;">
+    <div style="position: fixed; top: 84px; right: 20px; bottom: 20px; width: 380px; z-index: 100;">
       <v-card 
         elevation="4" 
         style="height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; flex-direction: column;"
@@ -354,26 +364,6 @@
         
       </v-card>
     </div>
-    
-    <!-- Notification Snackbar -->
-    <v-snackbar
-      v-model="snackbar.show"
-      :color="snackbar.color"
-      :timeout="snackbar.timeout"
-      top
-      right
-    >
-      {{ snackbar.text }}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          text
-          v-bind="attrs"
-          @click="snackbar.show = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
       
   </v-app>
 </template>
