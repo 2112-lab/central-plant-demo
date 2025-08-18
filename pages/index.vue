@@ -1216,13 +1216,38 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   /* Import Rubik Mono One font for app title */
   @import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
   .rubik-mono-one-regular {
     font-family: "Rubik Mono One", monospace;
     font-weight: 100;
     font-style: normal;
+  }
+
+  /* Prevent scroll bars on body */
+  body{
+    overflow: hidden;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f5f5f5; 
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #ccc; 
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #999; 
+  }
+
+  /* Corner of scrollbars */
+  ::-webkit-scrollbar-corner {
+    background-color: #f5f5f5; /* Match light theme */
   }
   
   /* Slightly increase font size for card description text */
