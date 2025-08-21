@@ -95,7 +95,6 @@ export default {
       ]
     },    
     transpile: [
-      '@2112-lab/pathfinder',
       'ufo',
       '@2112-lab/central-plant'
     ]

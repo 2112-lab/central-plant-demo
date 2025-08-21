@@ -221,6 +221,89 @@
             </v-expand-transition>
           </v-card>
 
+          <!-- Rotate Component Section -->
+          <v-card outlined class="mb-4">
+            <v-card-subtitle 
+              class="d-flex align-center cursor-pointer" 
+              @click="expandedSections.rotateComponent = !expandedSections.rotateComponent"
+            >
+              <v-icon small class="mr-2" color="warning">mdi-rotate-3d</v-icon>
+              <span class="font-weight-medium">Rotate Component</span>
+              <v-spacer></v-spacer>
+              <v-icon :class="{ 'rotate-180': expandedSections.rotateComponent }">
+                mdi-chevron-down
+              </v-icon>
+            </v-card-subtitle>
+            <v-expand-transition>
+              <v-card-text v-show="expandedSections.rotateComponent" class="pt-2">
+                <div class="card-description text-caption text--secondary mb-2">
+                  Rotate your component around any axis in the 3D scene
+                </div>
+
+                <div class="card-description text-caption text--secondary mb-3">
+                  <code class="text-primary">rotate(componentId, axis, value)</code>
+                </div>
+                
+                <v-select
+                  v-model="selectedComponentIdForRotation"
+                  :items="availableComponentIdsForRotation"
+                  item-text="text"
+                  item-value="id"
+                  label="componentId"
+                  prepend-icon="mdi-cube-outline"
+                  dense
+                  outlined
+                  :disabled="!sceneViewer || !centralPlant || availableComponentIdsForRotation.length === 0"
+                  persistent-hint
+                  class="mt-4 mb-n2"
+                />
+                
+                <v-select
+                  v-model="selectedAxisForRotation"
+                  :items="[
+                    { text: 'x', value: 'x' },
+                    { text: 'y', value: 'y' },
+                    { text: 'z', value: 'z' }
+                  ]"
+                  item-text="text"
+                  item-value="value"
+                  label="axis"
+                  prepend-icon="mdi-axis"
+                  dense
+                  outlined
+                  :disabled="!sceneViewer || !centralPlant"
+                  class="mb-n2"
+                />
+                
+                <v-text-field
+                  v-model.number="selectedValueForRotation"
+                  label="value (degrees)"
+                  type="number"
+                  step="15"
+                  prepend-icon="mdi-rotate-right"
+                  dense
+                  outlined
+                  :disabled="!sceneViewer || !centralPlant"
+                  :rules="[validateRotationDegrees]"
+                  hint="Rotation angle in degrees (e.g., 45, 90, 180, -90)"
+                  class="mb-2"
+                  persistent-hint
+                />
+                
+                <v-btn
+                  color="warning"
+                  @click="rotateComponentExample"
+                  :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForRotation"
+                  elevation="2"
+                  block
+                >
+                  <v-icon small class="mr-1">mdi-rotate-3d</v-icon>
+                  Apply Rotation
+                </v-btn>
+              </v-card-text>
+            </v-expand-transition>
+          </v-card>
+
           <!-- Add Connection Section -->
           <v-card outlined class="mb-4">
             <v-card-subtitle 
@@ -384,6 +467,7 @@ export default {
       expandedSections: {
         addComponent: true,
         translateComponent: false,
+        rotateComponent: false,
         addConnection: false,
         updatePaths: false,
         importScene: false
@@ -414,6 +498,11 @@ export default {
       selectedAxisForTranslation: 'x',
       selectedValueForTranslation: 2.5,
       
+      // Component selection for rotation
+      selectedComponentIdForRotation: 'COOLING-TOWER',
+      selectedAxisForRotation: 'y',
+      selectedValueForRotation: 45,
+      
       // Connection selection for adding new connections
       selectedSourceConnector: null,
       selectedDestinationConnector: null,
@@ -435,6 +524,27 @@ export default {
      * @returns {Array} Array of component ID objects with id and text properties
      */
     availableComponentIdsForTranslation() {
+      if (!this.centralPlant) {
+        return []
+      }
+      
+      try {
+        const componentIds = this.centralPlant.getComponentIds()
+        return componentIds.map(id => ({
+          id: id,
+          text: id
+        }))
+      } catch (error) {
+        console.warn('⚠️ Error getting component IDs:', error)
+        return []
+      }
+    },
+    
+    /**
+     * Get available component IDs for rotation dropdown
+     * @returns {Array} Array of component ID objects with id and text properties
+     */
+    availableComponentIdsForRotation() {
       if (!this.centralPlant) {
         return []
       }
@@ -775,9 +885,14 @@ export default {
           // Reset and auto-select first component for translation after scene loads
           this.$nextTick(() => {
             this.selectedComponentIdForTranslation = null
+            this.selectedComponentIdForRotation = null
             if (this.availableComponentIdsForTranslation.length > 0) {
               this.selectedComponentIdForTranslation = this.availableComponentIdsForTranslation[0].id
               console.log('🎯 Auto-selected component for translation after scene load:', this.selectedComponentIdForTranslation)
+            }
+            if (this.availableComponentIdsForRotation.length > 0) {
+              this.selectedComponentIdForRotation = this.availableComponentIdsForRotation[0].id
+              console.log('🎯 Auto-selected component for rotation after scene load:', this.selectedComponentIdForRotation)
             }
           })
         } catch (error) {
@@ -797,6 +912,7 @@ export default {
           
           // Reset translation component selection for new empty scene
           this.selectedComponentIdForTranslation = null
+          this.selectedComponentIdForRotation = null
         } catch (error) {
           console.error('❌ Error creating new scene:', error)
         }
@@ -835,6 +951,25 @@ export default {
       // Check if the value is a multiple of 0.5
       if ((numValue * 2) % 1 !== 0) {
         return 'Value must be a multiple of 0.5 (e.g., 0.5, 1.0, 1.5, 2.0, etc.)'
+      }
+      
+      return true
+    },
+
+    /**
+     * Validate that a value is a valid number for rotation (degrees)
+     * @param {number} value The value to validate
+     * @returns {boolean|string} True if valid, error message if invalid
+     */
+    validateRotationDegrees(value) {
+      if (value === null || value === undefined || value === '') {
+        return 'Value is required'
+      }
+      
+      const numValue = Number(value)
+      
+      if (isNaN(numValue)) {
+        return 'Must be a valid number'
       }
       
       return true
@@ -894,6 +1029,10 @@ export default {
               this.selectedComponentIdForTranslation = this.availableComponentIdsForTranslation[0].id
               console.log('🎯 Auto-selected component for translation:', this.selectedComponentIdForTranslation)
             }
+            if (!this.selectedComponentIdForRotation && this.availableComponentIdsForRotation.length > 0) {
+              this.selectedComponentIdForRotation = this.availableComponentIdsForRotation[0].id
+              console.log('🎯 Auto-selected component for rotation:', this.selectedComponentIdForRotation)
+            }
           })
           
           return addedComponent
@@ -942,6 +1081,43 @@ export default {
       } catch (error) {
         console.error('❌ Error translating component:', error)
         this.showSnackbar(`Error translating component: ${error.message}`, 'error')
+        return false
+      }
+    },
+
+    /**
+     * Example method demonstrating how to use the new rotate API
+     * This method can be called from the browser console for testing
+     * Usage: this.$refs.app.rotateComponentExample('COMPONENT-ID', 'y', 45)
+     * @returns {Object|false} The rotated component object if successful, false otherwise
+     */
+    rotateComponentExample() {
+      if (!this.centralPlant) {
+        console.error('❌ CentralPlant not initialized')
+        return false
+      }
+
+      if (!this.selectedComponentIdForRotation) {
+        console.error('❌ No component selected for rotation')
+        this.showSnackbar('Please select a component to rotate', 'warning')
+        return false
+      }
+
+      // Use the selected component ID from the dropdown
+      const componentId = this.selectedComponentIdForRotation;
+      const axis = this.selectedAxisForRotation;
+      const value = this.selectedValueForRotation;
+      
+      try {
+        this.centralPlant.rotate(componentId, axis, value)
+        console.log(`✅ Rotated component ${componentId} around ${axis} axis by ${value} degrees`)
+        this.showSnackbar(`Component ${componentId} rotated ${value}° around ${axis} axis`, 'success')
+        
+        this.shouldUpdatePaths = true;
+        return true
+      } catch (error) {
+        console.error('❌ Error rotating component:', error)
+        this.showSnackbar(`Error rotating component: ${error.message}`, 'error')
         return false
       }
     },
