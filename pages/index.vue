@@ -501,7 +501,7 @@ export default {
       // Component selection for rotation
       selectedComponentIdForRotation: 'COOLING-TOWER',
       selectedAxisForRotation: 'y',
-      selectedValueForRotation: 45,
+      selectedValueForRotation: 90,
       
       // Connection selection for adding new connections
       selectedSourceConnector: null,
@@ -594,7 +594,10 @@ export default {
   
   async mounted() {
     if(process.env.LOCAL_DEV) {
-
+      setTimeout(() => {
+        // Automatically rotate CHILLER-1 if it exists in the loaded scene
+        this.autoRotateChiller()
+      }, 1000)
     }
     
     // Start model preloading immediately when the page loads
@@ -898,6 +901,40 @@ export default {
         } catch (error) {
           console.error('❌ Error loading new scene:', error)
         }
+      }
+    },
+
+    /**
+     * Automatically rotate CHILLER-1 component if it exists in the scene
+     * This method is called after a scene is loaded to demonstrate automatic component manipulation
+     */
+    autoRotateChiller() {
+      if (!this.centralPlant) {
+        console.warn('⚠️ CentralPlant not available for auto-rotation')
+        return
+      }
+
+      try {
+        // Get all component IDs to check if CHILLER-1 exists
+        const componentIds = this.centralPlant.getComponentIds()
+        
+        if (componentIds.includes('CHILLER-1')) {
+          console.log('🔄 Auto-rotating CHILLER-1 component...')
+          
+          // Rotate CHILLER-1 by 90 degrees around the Y axis
+          this.centralPlant.rotate('CHILLER-1', 'y', 90)
+          
+          // Update paths after rotation
+          this.centralPlant.updatePaths()
+          
+          console.log('✅ CHILLER-1 automatically rotated 90° around Y axis')
+          this.showSnackbar('CHILLER-1 automatically rotated after scene load', 'success')
+        } else {
+          console.log('ℹ️ CHILLER-1 component not found in loaded scene')
+        }
+      } catch (error) {
+        console.error('❌ Error auto-rotating CHILLER-1:', error)
+        this.showSnackbar(`Error auto-rotating CHILLER-1: ${error.message}`, 'error')
       }
     },
 
