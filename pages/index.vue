@@ -482,11 +482,7 @@ export default {
     this.initializeCentralPlant();
   },
   
-  async mounted() {
-    if(process.env.LOCAL_DEV) {
-
-    }
-    
+  async mounted() {    
     // Start model preloading immediately when the page loads
     this.initializeModelPreloading();
 
@@ -525,6 +521,19 @@ export default {
     
   // Methods section - contains all component methods
   methods: {
+
+    /**
+     * Initialize the CentralPlant for accessing scene utilities
+     * This is called early in the lifecycle to create the collection instance
+     */
+    initializeCentralPlant() {
+      if (!this.centralPlant) {
+        // Initialize with a placeholder - the actual component instance will be set later
+        this.centralPlant = new CentralPlant()
+        console.log('🏗️ CentralPlant initialized from index.vue:', this.centralPlant)
+      }
+      return this.centralPlant
+    },
 
     openFileImport() {
       console.log("openFileImport started");
@@ -801,19 +810,6 @@ export default {
           console.error('❌ Error creating new scene:', error)
         }
       }
-    },
-
-    /**
-     * Initialize the CentralPlant for accessing scene utilities
-     * This is called early in the lifecycle to create the collection instance
-     */
-    initializeCentralPlant() {
-      if (!this.centralPlant) {
-        // Initialize with a placeholder - the actual component instance will be set later
-        this.centralPlant = new CentralPlant()
-        console.log('🏗️ CentralPlant initialized from index.vue:', this.centralPlant)
-      }
-      return this.centralPlant
     },
 
     /**
