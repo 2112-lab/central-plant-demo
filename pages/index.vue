@@ -380,6 +380,9 @@ export default {
       
       navbarHeight: 64,       // Height of the top navigation bar
       
+      // Control auto-loading behavior
+      autoLoadScene: false,   // Set to false to prevent auto-loading on page load
+      
       // Collapsible sections state
       expandedSections: {
         addComponent: true,
@@ -756,6 +759,12 @@ export default {
         
         if (success) {
           console.log('✅ Vanilla JavaScript SceneViewer initialized successfully')
+          
+          // Create an empty scene to override any auto-loaded content
+          if (!this.autoLoadScene) {
+            console.log('🔄 Creating empty scene to prevent auto-loading...')
+            this.sceneViewer.createEmptyScene()
+          }
           
           // Set up Nuxt event listeners for scene operations
           this.$nuxt.$on('loadNewScene', this.handleLoadNewScene)
