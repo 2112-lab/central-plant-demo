@@ -135,7 +135,7 @@
               },
               "position": {
                 "x": -3.5,
-                "y": 0.5,
+                "y": -0.5,
                 "z": 1
               },
               "geometry": "CONNECTOR-GEO"
@@ -155,7 +155,7 @@
               },
               "position": {
                 "x": -3.5,
-                "y": -0.5,
+                "y": 0.5,
                 "z": 1
               },
               "geometry": "CONNECTOR-GEO"
@@ -175,7 +175,7 @@
               },
               "position": {
                 "x": -3.5,
-                "y": -0.5,
+                "y": 0.5,
                 "z": 0.5
               },
               "geometry": "CONNECTOR-GEO"
@@ -195,7 +195,7 @@
               },
               "position": {
                 "x": -3.5,
-                "y": 0.5,
+                "y": -0.5,
                 "z": 0.5
               },
               "geometry": "CONNECTOR-GEO"
