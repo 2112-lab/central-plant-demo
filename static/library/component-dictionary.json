@@ -1,6 +1,6 @@
 {
   "PUMP": {
-    "modelKey": "Pump-01-02.glb",
+    "modelKey": "pump-01-03.glb",
     "modelType": "glb",
     "name": "Centrifugal Pump",
     "thumbnail": "/library/thumbnails/pump-0.1.1.png",
@@ -32,16 +32,16 @@
         "userData": {
           "direction": [
             0,
-            0,
-            1
+            -1,
+            0
           ],
           "componentType": "connector",
           "forExport": true
         },
         "position": {
           "x": -1,
-          "y": 0.5,
-          "z": 0
+          "y": 0,
+          "z": 0.5
         },
         "geometry": "CONNECTOR-GEO"
       },
@@ -51,23 +51,23 @@
         "userData": {
           "direction": [
             0,
-            1,
-            0
+            0,
+            1
           ],
           "componentType": "connector",
           "forExport": true
         },
         "position": {
           "x": -1,
-          "y": 1,
-          "z": 0
+          "y": 0,
+          "z": 1
         },
         "geometry": "CONNECTOR-GEO"
       }
     ]
   },
   "CHILLER": {
-    "modelKey": "Chiller-01-01.glb",
+    "modelKey": "chiller-01-02.glb",
     "modelType": "glb",
     "name": "Air-Cooled Chiller",
     "thumbnail": "/library/thumbnails/chiller-0.1.1.png",
@@ -108,8 +108,8 @@
         },
         "position": {
           "x": -3.5,
-          "y": 1,
-          "z": 0.5
+          "y": 0.5,
+          "z": 1
         },
         "geometry": "CONNECTOR-GEO"
       },
@@ -128,8 +128,8 @@
         },
         "position": {
           "x": -3.5,
-          "y": 1,
-          "z": -0.5
+          "y": -0.5,
+          "z": 1
         },
         "geometry": "CONNECTOR-GEO"
       },
@@ -148,8 +148,8 @@
         },
         "position": {
           "x": -3.5,
-          "y": 0.5,
-          "z": -0.5
+          "y": -0.5,
+          "z": 0.5
         },
         "geometry": "CONNECTOR-GEO"
       },
@@ -176,7 +176,7 @@
     ]
   },
   "COOLING-TOWER": {
-    "modelKey": "3D-Cooling-Tower-Square-Unit-0.1.1.glb",
+    "modelKey": "cooling-tower-01-02.glb",
     "modelType": "glb",
     "name": "Cooling Tower",
     "thumbnail": "/library/thumbnails/cooling-tower-0.1.1.png",
@@ -208,16 +208,16 @@
         "userData": {
           "direction": [
             0,
-            0,
-            1
+            1,
+            0
           ],
           "componentType": "connector",
           "forExport": true
         },
         "position": {
           "x": -1,
-          "y": 3,
-          "z": 1.5
+          "y": 1.5,
+          "z": 3
         },
         "geometry": "CONNECTOR-GEO"
       },
@@ -227,16 +227,16 @@
         "userData": {
           "direction": [
             0,
-            0,
-            1
+            1,
+            0
           ],
           "componentType": "connector",
           "forExport": true
         },
         "position": {
           "x": 0.5,
-          "y": 3,
-          "z": 1.5
+          "y": 1.5,
+          "z": 3
         },
         "geometry": "CONNECTOR-GEO"
       }

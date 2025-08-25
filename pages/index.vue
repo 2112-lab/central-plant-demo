@@ -596,7 +596,7 @@ export default {
     if(process.env.LOCAL_DEV) {
       setTimeout(() => {
         // Automatically rotate CHILLER-1 if it exists in the loaded scene
-        this.autoRotateChiller()
+        // this.autoRotateChiller()
       }, 1000)
     }
     
@@ -1034,8 +1034,8 @@ export default {
         const options = {
           position: {
             x: -0.5, 
-            y: 0, 
-            z: -5.5
+            y: -5.5, 
+            z: 0
           },
           rotation: {
             x: 0, 

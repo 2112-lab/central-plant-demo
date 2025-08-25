@@ -52,8 +52,8 @@
           },
           "position": {
             "x": 0.5,
-            "y": 0,
-            "z": -5.5
+            "y": -5.5,
+            "z": 0
           },
           "rotation": {
             "x": 0,
@@ -67,16 +67,16 @@
               "userData": {
                 "direction": [
                   0,
-                  0,
-                  1
+                  1,
+                  0
                 ],
                 "componentType": "connector",
                 "forExport": true
               },
               "position": {
                 "x": -1,
-                "y": 3,
-                "z": 1.5
+                "y": 1.5,
+                "z": 3
               },
               "geometry": "CONNECTOR-GEO"
             },
@@ -86,16 +86,16 @@
               "userData": {
                 "direction": [
                   0,
-                  0,
-                  1
+                  1,
+                  0
                 ],
                 "componentType": "connector",
                 "forExport": true
               },
               "position": {
                 "x": 0.5,
-                "y": 3,
-                "z": 1.5
+                "y": 1.5,
+                "z": 3
               },
               "geometry": "CONNECTOR-GEO"
             }
@@ -110,8 +110,8 @@
           },
           "position": {
             "x": 7,
-            "y": 0,
-            "z": 1
+            "y": 1,
+            "z": 0
           },
           "rotation": {
             "x": 0,
@@ -135,8 +135,8 @@
               },
               "position": {
                 "x": -3.5,
-                "y": 1,
-                "z": 0.5
+                "y": 0.5,
+                "z": 1
               },
               "geometry": "CONNECTOR-GEO"
             },
@@ -155,8 +155,8 @@
               },
               "position": {
                 "x": -3.5,
-                "y": 1,
-                "z": -0.5
+                "y": -0.5,
+                "z": 1
               },
               "geometry": "CONNECTOR-GEO"
             },
@@ -175,8 +175,8 @@
               },
               "position": {
                 "x": -3.5,
-                "y": 0.5,
-                "z": -0.5
+                "y": -0.5,
+                "z": 0.5
               },
               "geometry": "CONNECTOR-GEO"
             },
@@ -212,37 +212,18 @@
           "type": "Mesh",
           "position": {
             "x": -3.5,
-            "y": 0,
-            "z": -1
+            "y": -1,
+            "z": 0
           },
           "rotation": {
             "x": 0,
-            "y": 90,
-            "z": 0
+            "y": 0,
+            "z": -90
           },
           "geometry": "PUMP-1-GEO",
           "children": [
             {
               "uuid": "PUMP-1-CONNECTOR-1",
-              "type": "Mesh",
-              "userData": {
-                "direction": [
-                  0,
-                  0,
-                  1
-                ],
-                "componentType": "connector",
-                "forExport": true
-              },
-              "position": {
-                "x": -1,
-                "y": 0.5,
-                "z": 0
-              },
-              "geometry": "CONNECTOR-GEO"
-            },
-            {
-              "uuid": "PUMP-1-CONNECTOR-2",
               "type": "Mesh",
               "userData": {
                 "direction": [
@@ -255,8 +236,27 @@
               },
               "position": {
                 "x": -1,
-                "y": 1,
-                "z": 0
+                "y": 0,
+                "z": 0.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-1-CONNECTOR-2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  0,
+                  -1
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 0,
+                "z": 1
               },
               "geometry": "CONNECTOR-GEO"
             }
@@ -272,37 +272,18 @@
           },
           "position": {
             "x": -1.5,
-            "y": 0,
-            "z": -1
+            "y": -1,
+            "z": 0
           },
           "rotation": {
             "x": 0,
-            "y": 90,
-            "z": 0
+            "y": 0,
+            "z": -90
           },
           "geometry": "PUMP-2-GEO",
           "children": [
             {
               "uuid": "PUMP-2-CONNECTOR-1",
-              "type": "Mesh",
-              "userData": {
-                "direction": [
-                  0,
-                  0,
-                  1
-                ],
-                "componentType": "connector",
-                "forExport": true
-              },
-              "position": {
-                "x": -1,
-                "y": 0.5,
-                "z": 0
-              },
-              "geometry": "CONNECTOR-GEO"
-            },
-            {
-              "uuid": "PUMP-2-CONNECTOR-2",
               "type": "Mesh",
               "userData": {
                 "direction": [
@@ -315,8 +296,27 @@
               },
               "position": {
                 "x": -1,
-                "y": 1,
-                "z": 0
+                "y": 0,
+                "z": 0.5
+              },
+              "geometry": "CONNECTOR-GEO"
+            },
+            {
+              "uuid": "PUMP-2-CONNECTOR-2",
+              "type": "Mesh",
+              "userData": {
+                "direction": [
+                  0,
+                  0,
+                  -1
+                ],
+                "componentType": "connector",
+                "forExport": true
+              },
+              "position": {
+                "x": -1,
+                "y": 0,
+                "z": 1
               },
               "geometry": "CONNECTOR-GEO"
             }
@@ -332,8 +332,8 @@
           },
           "position": {
             "x": 0.5,
-            "y": 0,
-            "z": 2.5
+            "y": 2.5,
+            "z": 0
           },
           "rotation": {
             "x": 0,
@@ -356,8 +356,8 @@
               },
               "position": {
                 "x": -1,
-                "y": 0.5,
-                "z": 0
+                "y": 0,
+                "z": 0.5
               },
               "geometry": "CONNECTOR-GEO"
             },
@@ -367,16 +367,16 @@
               "userData": {
                 "direction": [
                   0,
-                  1,
-                  0
+                  0,
+                  -1
                 ],
                 "componentType": "connector",
                 "forExport": true
               },
               "position": {
                 "x": -1,
-                "y": 1,
-                "z": 0
+                "y": 0,
+                "z": 1
               },
               "geometry": "CONNECTOR-GEO"
             }
@@ -392,8 +392,8 @@
           },
           "position": {
             "x": 0.5,
-            "y": 0,
-            "z": 4.5
+            "y": 4.5,
+            "z": 0
           },
           "rotation": {
             "x": 0,
@@ -416,8 +416,8 @@
               },
               "position": {
                 "x": -1,
-                "y": 0.5,
-                "z": 0
+                "y": 0,
+                "z": 0.5
               },
               "geometry": "CONNECTOR-GEO"
             },
@@ -427,16 +427,16 @@
               "userData": {
                 "direction": [
                   0,
-                  1,
-                  0
+                  0,
+                  -1
                 ],
                 "componentType": "connector",
                 "forExport": true
               },
               "position": {
                 "x": -1,
-                "y": 1,
-                "z": 0
+                "y": 0,
+                "z": 1
               },
               "geometry": "CONNECTOR-GEO"
             }
@@ -445,11 +445,6 @@
         {
           "uuid": "UNKNOWN-CONNECTOR-1",
           "type": "Mesh",
-          "position": {
-            "x": -5,
-            "y": 0.5,
-            "z": 3.5
-          },
           "userData": {
             "direction": [
               1,
@@ -458,6 +453,11 @@
             ],
             "componentType": "connector",
             "forExport": true
+          },
+          "position": {
+            "x": -5,
+            "y": 3.5,
+            "z": 0.5
           },
           "geometry": "CONNECTOR-GEO"
         },
@@ -470,8 +470,8 @@
           },
           "position": {
             "x": -5,
-            "y": 0.5,
-            "z": 1.5
+            "y": 1.5,
+            "z": 0.5
           },
           "geometry": "CONNECTOR-GEO"
         }
