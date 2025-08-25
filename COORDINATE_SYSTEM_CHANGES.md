@@ -1,12 +1,13 @@
-# Coordinate System Changes: Y-up to Z-up
+# Coordinate System Changes: Y-up to Z-up with Flipped Y
 
-This document outlines the changes made to convert the Central Plant Demo from a Y-up coordinate system to a Z-up coordinate system.
+This document outlines the changes made to convert the Central Plant Demo from a Y-up coordinate system to a Z-up coordinate system with flipped Y direction.
 
 ## Overview
 
-The application has been modified to use a **Z-up coordinate system** where:
+The application has been modified to use a **Z-up coordinate system with flipped Y direction** where:
 - **Z-axis** is vertical (up)
 - **X-axis** and **Y-axis** are horizontal
+- **Y-axis** direction is flipped (negative Y values in the old system become positive)
 - Ground plane is at Z=0
 - Objects are positioned with Z values for height
 
@@ -60,20 +61,22 @@ The application has been modified to use a **Z-up coordinate system** where:
 
 ## Coordinate System Mapping
 
-| Aspect | Y-up System | Z-up System |
-|--------|-------------|-------------|
+| Aspect | Y-up System | Z-up System with Flipped Y |
+|--------|-------------|----------------------------|
 | Vertical Axis | Y | Z |
 | Ground Level | Y = 0 | Z = 0 |
 | Camera Up Vector | (0, 1, 0) | (0, 0, 1) |
 | Ground Plane Rotation | rotation.x = -π/2 | No rotation |
 | Height Coordinate | Y values | Z values |
+| Y Direction | Standard | Flipped (negative becomes positive) |
 
 ## Impact on Existing Data
 
 Existing JSON scene files will need coordinate transformation:
 - Y coordinates become Z coordinates for height
-- Z coordinates become Y coordinates  
+- Z coordinates become Y coordinates (with flipped direction)
 - Direction vectors need rotation adjustment
+- **Y-direction flip**: Positive Y values become negative, negative Y values become positive
 
 ## Testing Recommendations
 
@@ -83,17 +86,19 @@ Existing JSON scene files will need coordinate transformation:
 4. **Drag & Drop**: Test object placement and snapping
 5. **Existing Scenes**: Test loading of existing JSON files (may need conversion)
 
-## Benefits of Z-up System
+## Benefits of Z-up System with Flipped Y
 
 - Consistent with many CAD and engineering applications
 - More intuitive for industrial/mechanical applications
 - Aligns with common 3D modeling conventions
 - Better for architectural and engineering visualizations
+- Y-direction flip provides better compatibility with certain industry standards
 
 ## Migration Notes
 
 For developers working with existing scenes:
 - Update any hardcoded Y-coordinates used for height to Z-coordinates
+- **Apply Y-direction flip**: Change positive Y to negative Y and vice versa
 - Review custom components for coordinate assumptions
 - Test all positioning and rotation logic
 - Update any external tools or exporters that generate scene data

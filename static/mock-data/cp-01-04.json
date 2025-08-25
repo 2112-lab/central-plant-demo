@@ -52,7 +52,7 @@
           },
           "position": {
             "x": 0.5,
-            "y": -5.5,
+            "y": 5.5,
             "z": 0
           },
           "rotation": {
@@ -75,7 +75,7 @@
               },
               "position": {
                 "x": -1,
-                "y": 1.5,
+                "y": -1.5,
                 "z": 3
               },
               "geometry": "CONNECTOR-GEO"
@@ -94,7 +94,7 @@
               },
               "position": {
                 "x": 0.5,
-                "y": 1.5,
+                "y": -1.5,
                 "z": 3
               },
               "geometry": "CONNECTOR-GEO"
@@ -110,7 +110,7 @@
           },
           "position": {
             "x": 7,
-            "y": 1,
+            "y": -1,
             "z": 0
           },
           "rotation": {
@@ -212,13 +212,13 @@
           "type": "Mesh",
           "position": {
             "x": -3.5,
-            "y": -1,
+            "y": 1,
             "z": 0
           },
           "rotation": {
             "x": 0,
             "y": 0,
-            "z": -90
+            "z": 90
           },
           "geometry": "PUMP-1-GEO",
           "children": [
@@ -272,13 +272,13 @@
           },
           "position": {
             "x": -1.5,
-            "y": -1,
+            "y": 1,
             "z": 0
           },
           "rotation": {
             "x": 0,
             "y": 0,
-            "z": -90
+            "z": 90
           },
           "geometry": "PUMP-2-GEO",
           "children": [
@@ -332,7 +332,7 @@
           },
           "position": {
             "x": 0.5,
-            "y": 2.5,
+            "y": -2.5,
             "z": 0
           },
           "rotation": {
@@ -392,7 +392,7 @@
           },
           "position": {
             "x": 0.5,
-            "y": 4.5,
+            "y": -4.5,
             "z": 0
           },
           "rotation": {
@@ -456,7 +456,7 @@
           },
           "position": {
             "x": -5,
-            "y": 3.5,
+            "y": -3.5,
             "z": 0.5
           },
           "geometry": "CONNECTOR-GEO"
@@ -470,7 +470,7 @@
           },
           "position": {
             "x": -5,
-            "y": 1.5,
+            "y": -1.5,
             "z": 0.5
           },
           "geometry": "CONNECTOR-GEO"

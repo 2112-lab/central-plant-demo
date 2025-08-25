@@ -1034,7 +1034,7 @@ export default {
         const options = {
           position: {
             x: -0.5, 
-            y: -5.5, 
+            y: 5.5,  // Flipped Y direction (was -5.5, now positive)
             z: 0
           },
           rotation: {
