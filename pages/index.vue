@@ -500,7 +500,7 @@ export default {
       
       // Component selection for rotation
       selectedComponentIdForRotation: 'COOLING-TOWER',
-      selectedAxisForRotation: 'y',
+      selectedAxisForRotation: 'z',
       selectedValueForRotation: 90,
       
       // Connection selection for adding new connections

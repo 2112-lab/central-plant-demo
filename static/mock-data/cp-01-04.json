@@ -67,7 +67,7 @@
               "userData": {
                 "direction": [
                   0,
-                  1,
+                  -1,
                   0
                 ],
                 "componentType": "connector",
@@ -86,7 +86,7 @@
               "userData": {
                 "direction": [
                   0,
-                  1,
+                  -1,
                   0
                 ],
                 "componentType": "connector",
@@ -228,7 +228,7 @@
               "userData": {
                 "direction": [
                   0,
-                  1,
+                  -1,
                   0
                 ],
                 "componentType": "connector",
@@ -248,7 +248,7 @@
                 "direction": [
                   0,
                   0,
-                  -1
+                  1
                 ],
                 "componentType": "connector",
                 "forExport": true
@@ -288,7 +288,7 @@
               "userData": {
                 "direction": [
                   0,
-                  1,
+                  -1,
                   0
                 ],
                 "componentType": "connector",
@@ -308,7 +308,7 @@
                 "direction": [
                   0,
                   0,
-                  -1
+                  1
                 ],
                 "componentType": "connector",
                 "forExport": true
@@ -368,7 +368,7 @@
                 "direction": [
                   0,
                   0,
-                  -1
+                  1
                 ],
                 "componentType": "connector",
                 "forExport": true
@@ -428,7 +428,7 @@
                 "direction": [
                   0,
                   0,
-                  -1
+                  1
                 ],
                 "componentType": "connector",
                 "forExport": true
