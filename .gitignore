@@ -91,6 +91,6 @@ sw.*
 # Vim swap files
 *.swp
 
-.github
-
-central-plant
+release-workflow/test-results/
+release-workflow/playwright-report/g*
+release-workflow/playwright-report/*

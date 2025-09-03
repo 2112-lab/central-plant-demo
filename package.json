@@ -7,7 +7,16 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "cp": "npm install @2112-lab/central-plant@latest"
+    "cp": "npm install @2112-lab/central-plant@latest",
+    "test": "playwright test --config=release-workflow/playwright.config.ts",
+    "test:headed": "playwright test --config=release-workflow/playwright.config.ts --headed",
+    "test:ui": "playwright test --config=release-workflow/playwright.config.ts --ui",
+    "test:debug": "playwright test --config=release-workflow/playwright.config.ts --debug",
+    "test:copilot:visual": "cross-env COPILOT_VISUAL_TESTS=true playwright test tests/copilot-visual.test.ts --config=release-workflow/playwright.config.ts",
+    "test:copilot:analyze": "cross-env COPILOT_VISUAL_TESTS=true playwright test tests/copilot-visual.test.ts --config=release-workflow/playwright.config.ts --reporter=line",
+    "test:copilot:headed": "cross-env COPILOT_VISUAL_TESTS=true playwright test tests/copilot-visual.test.ts --config=release-workflow/playwright.config.ts --headed",
+    "test:copilot:single": "cross-env COPILOT_VISUAL_TESTS=true playwright test tests/copilot-single-task.test.ts --config=release-workflow/playwright.config.ts --reporter=line",
+    "test:copilot:single:headed": "cross-env COPILOT_VISUAL_TESTS=true playwright test tests/copilot-single-task.test.ts --config=release-workflow/playwright.config.ts --headed"
   },
   "dependencies": {
     "@2112-lab/central-plant": "^0.1.34",
