@@ -1,10 +1,11 @@
 <template>  
 <!-- Main application container with light background -->
-  <v-app id="appContainer" style="background-color:#f5f5f5;">     
+  <v-app id="appContainer" data-testid="app-container" style="background-color:#f5f5f5;">     
     
     <!-- Top navigation bar -->
     <v-app-bar 
       color="#fff"
+      data-testid="main-navigation-bar"
       style="
         font-family:'Amazon Ember', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif; 
         position:relative; 
@@ -15,9 +16,9 @@
       "
     >
       <!-- App title with link to home -->
-      <v-toolbar-title>
-        <router-link to="/" style="text-decoration: none; color: inherit;">
-          <span class="rubik-mono-one-regular">Central Plant Demo</span>
+      <v-toolbar-title data-testid="app-title">
+        <router-link to="/" style="text-decoration: none; color: inherit;" data-testid="app-title-link">
+          <span class="rubik-mono-one-regular" data-testid="app-title-text">Central Plant Demo</span>
         </router-link>
       </v-toolbar-title>
 
@@ -33,10 +34,11 @@
     />
 
     <!-- Main content area - flexible layout with primary viewport and right sidebar -->    
-    <div style="display: flex; width: 100%; overflow: hidden; margin-top: 64px;">      
+    <div data-testid="main-content-area" style="display: flex; width: 100%; overflow: hidden; margin-top: 64px;">      
       <div 
         id="scene-container" 
         ref="sceneContainer"
+        data-testid="primary-viewport"
         style="position:absolute; top:84px; left:20px; right:420px; bottom:20px; box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12)"
       >
         <!-- Scene content will be rendered here -->
@@ -44,26 +46,29 @@
     </div>    
 
     <!-- API Examples Panel - Right Sidebar -->
-    <div style="position: fixed; top: 84px; right: 20px; bottom: 20px; width: 380px; z-index: 100;">
+    <div data-testid="right-drawer" style="position: fixed; top: 84px; right: 20px; bottom: 20px; width: 380px; z-index: 100;">
       <v-card 
         elevation="4" 
+        data-testid="api-examples-panel"
         style="height: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); display: flex; flex-direction: column;"
       >
         <!-- Header -->
-        <v-card-title class="py-3">
+        <v-card-title data-testid="api-examples-header" class="py-3">
           <v-icon class="mr-2">mdi-api</v-icon>
-          <span class="text-h6">API Examples</span>
+          <span class="text-h6" data-testid="api-examples-title">API Examples</span>
           <v-spacer></v-spacer>
           <a 
             href="https://central-plant-api-docs.s3.us-east-1.amazonaws.com/v0.1.24/CentralPlant.html" 
             target="_blank" 
             class="text-decoration-none"
+            data-testid="api-docs-link"
           >
             <v-btn 
               x-small 
               outlined 
               color="primary"
               class="mr-2"
+              data-testid="api-docs-button"
             >
               Docs
               <v-icon small class="ml-1">mdi-open-in-new</v-icon>
@@ -73,11 +78,13 @@
             href="https://drive.google.com/drive/u/0/folders/1EL6EWRr10p6Y6-vlU4qYAawyn6Ck9J5R" 
             target="_blank" 
             class="text-decoration-none"
+            data-testid="samples-link"
           >
             <v-btn 
               x-small 
               outlined 
               color="primary"
+              data-testid="samples-button"
             >
               Samples
               <v-icon small class="ml-1">mdi-open-in-new</v-icon>
@@ -91,24 +98,25 @@
         <div style="flex: 1; overflow-y: auto; padding: 16px;">
           
           <!-- Add Component Section -->
-          <v-card outlined class="mb-4">
+          <v-card outlined class="mb-4" data-testid="add-component-section">
             <v-card-subtitle 
               class="d-flex align-center cursor-pointer" 
               @click="expandedSections.addComponent = !expandedSections.addComponent"
+              data-testid="add-component-header"
             >
               <v-icon small class="mr-2" color="primary">mdi-plus</v-icon>
-              <span class="font-weight-medium">Add Component</span>
+              <span class="font-weight-medium" data-testid="add-component-title">Add Component</span>
               <v-spacer></v-spacer>
-              <v-icon :class="{ 'rotate-180': expandedSections.addComponent }">
+              <v-icon :class="{ 'rotate-180': expandedSections.addComponent }" data-testid="add-component-toggle">
                 mdi-chevron-down
               </v-icon>
             </v-card-subtitle>
             <v-expand-transition>
-              <v-card-text v-show="expandedSections.addComponent" class="pt-2">
-                <div class="card-description text-caption text--secondary mb-2">
+              <v-card-text v-show="expandedSections.addComponent" class="pt-2" data-testid="add-component-content">
+                <div class="card-description text-caption text--secondary mb-2" data-testid="add-component-description">
                   Add a new component to the scene with positioning options
                 </div>
-                <div class="card-description text-caption text--secondary mb-3">
+                <div class="card-description text-caption text--secondary mb-3" data-testid="add-component-code">
                   <code class="text-primary">addComponent(libraryId)</code>
                 </div>
                 
@@ -122,6 +130,7 @@
                   dense
                   outlined
                   class="mt-4 mb-n3"
+                  data-testid="add-component-library-select"
                 />
                 
                 <v-btn
@@ -130,6 +139,7 @@
                   :disabled="!sceneViewer || !centralPlant || !selectedLibraryId"
                   elevation="2"
                   block
+                  data-testid="add-component-button"
                 >
                   <v-icon small class="mr-1">mdi-plus</v-icon>
                   Add Component
@@ -139,25 +149,26 @@
           </v-card>
 
           <!-- Translate Component Section -->
-          <v-card outlined class="mb-4">
+          <v-card outlined class="mb-4" data-testid="translate-component-section">
             <v-card-subtitle 
               class="d-flex align-center cursor-pointer" 
               @click="expandedSections.translateComponent = !expandedSections.translateComponent"
+              data-testid="translate-component-header"
             >
               <v-icon small class="mr-2" color="success">mdi-axis-arrow</v-icon>
-              <span class="font-weight-medium">Translate Component</span>
+              <span class="font-weight-medium" data-testid="translate-component-title">Translate Component</span>
               <v-spacer></v-spacer>
-              <v-icon :class="{ 'rotate-180': expandedSections.translateComponent }">
+              <v-icon :class="{ 'rotate-180': expandedSections.translateComponent }" data-testid="translate-component-toggle">
                 mdi-chevron-down
               </v-icon>
             </v-card-subtitle>
             <v-expand-transition>
-              <v-card-text v-show="expandedSections.translateComponent" class="pt-2">
-                <div class="card-description text-caption text--secondary mb-2">
+              <v-card-text v-show="expandedSections.translateComponent" class="pt-2" data-testid="translate-component-content">
+                <div class="card-description text-caption text--secondary mb-2" data-testid="translate-component-description">
                   Position your component as needed in the 3D scene
                 </div>
 
-                <div class="card-description text-caption text--secondary mb-3">
+                <div class="card-description text-caption text--secondary mb-3" data-testid="translate-component-code">
                   <code class="text-primary">translate(componentId, axis, value)</code>
                 </div>
                 
@@ -173,6 +184,7 @@
                   :disabled="!sceneViewer || !centralPlant || availableComponentIdsForTranslation.length === 0"
                   persistent-hint
                   class="mt-4 mb-n2"
+                  data-testid="translate-component-select"
                 />
                 
                 <v-select
@@ -190,6 +202,7 @@
                   outlined
                   :disabled="!sceneViewer || !centralPlant"
                   class="mb-n2"
+                  data-testid="translate-axis-select"
                 />
                 
                 <v-text-field
@@ -205,6 +218,7 @@
                   hint="Translation distance in 3D units (must be multiple of 0.5)"
                   class="mb-2"
                   persistent-hint
+                  data-testid="translate-value-input"
                 />
                 
                 <v-btn
@@ -213,6 +227,7 @@
                   :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForTranslation"
                   elevation="2"
                   block
+                  data-testid="translate-component-button"
                 >
                   <v-icon small class="mr-1">mdi-axis-arrow</v-icon>
                   Apply Translation
@@ -222,25 +237,26 @@
           </v-card>
 
           <!-- Rotate Component Section -->
-          <v-card outlined class="mb-4">
+          <v-card outlined class="mb-4" data-testid="rotate-component-section">
             <v-card-subtitle 
               class="d-flex align-center cursor-pointer" 
               @click="expandedSections.rotateComponent = !expandedSections.rotateComponent"
+              data-testid="rotate-component-header"
             >
               <v-icon small class="mr-2" color="warning">mdi-rotate-3d</v-icon>
-              <span class="font-weight-medium">Rotate Component</span>
+              <span class="font-weight-medium" data-testid="rotate-component-title">Rotate Component</span>
               <v-spacer></v-spacer>
-              <v-icon :class="{ 'rotate-180': expandedSections.rotateComponent }">
+              <v-icon :class="{ 'rotate-180': expandedSections.rotateComponent }" data-testid="rotate-component-toggle">
                 mdi-chevron-down
               </v-icon>
             </v-card-subtitle>
             <v-expand-transition>
-              <v-card-text v-show="expandedSections.rotateComponent" class="pt-2">
-                <div class="card-description text-caption text--secondary mb-2">
+              <v-card-text v-show="expandedSections.rotateComponent" class="pt-2" data-testid="rotate-component-content">
+                <div class="card-description text-caption text--secondary mb-2" data-testid="rotate-component-description">
                   Rotate your component around any axis in the 3D scene
                 </div>
 
-                <div class="card-description text-caption text--secondary mb-3">
+                <div class="card-description text-caption text--secondary mb-3" data-testid="rotate-component-code">
                   <code class="text-primary">rotate(componentId, axis, value)</code>
                 </div>
                 
@@ -256,6 +272,7 @@
                   :disabled="!sceneViewer || !centralPlant || availableComponentIdsForRotation.length === 0"
                   persistent-hint
                   class="mt-4 mb-n2"
+                  data-testid="rotate-component-select"
                 />
                 
                 <v-select
@@ -273,6 +290,7 @@
                   outlined
                   :disabled="!sceneViewer || !centralPlant"
                   class="mb-n2"
+                  data-testid="rotate-axis-select"
                 />
                 
                 <v-text-field
@@ -288,6 +306,7 @@
                   hint="Rotation angle in degrees (e.g., 45, 90, 180, -90)"
                   class="mb-2"
                   persistent-hint
+                  data-testid="rotate-value-input"
                 />
                 
                 <v-btn
@@ -296,6 +315,7 @@
                   :disabled="!sceneViewer || !centralPlant || !selectedComponentIdForRotation"
                   elevation="2"
                   block
+                  data-testid="rotate-component-button"
                 >
                   <v-icon small class="mr-1">mdi-rotate-3d</v-icon>
                   Apply Rotation
@@ -305,28 +325,29 @@
           </v-card>
 
           <!-- Add Connection Section -->
-          <v-card outlined class="mb-4">
+          <v-card outlined class="mb-4" data-testid="add-connection-section">
             <v-card-subtitle 
               class="d-flex align-center cursor-pointer" 
               @click="expandedSections.addConnection = !expandedSections.addConnection"
+              data-testid="add-connection-header"
             >
               <v-icon small class="mr-2" color="info">mdi-connection</v-icon>
-              <span class="font-weight-medium">Add Connection</span>
+              <span class="font-weight-medium" data-testid="add-connection-title">Add Connection</span>
               <v-spacer></v-spacer>
-              <v-icon :class="{ 'rotate-180': expandedSections.addConnection }">
+              <v-icon :class="{ 'rotate-180': expandedSections.addConnection }" data-testid="add-connection-toggle">
                 mdi-chevron-down
               </v-icon>
             </v-card-subtitle>
             <v-expand-transition>
-              <v-card-text v-show="expandedSections.addConnection" class="pt-2">
-                <div class="card-description text-caption text--secondary mb-2">
+              <v-card-text v-show="expandedSections.addConnection" class="pt-2" data-testid="add-connection-content">
+                <div class="card-description text-caption text--secondary mb-2" data-testid="add-connection-description">
                   Connect components together to create flow paths
                 </div>
-                <div class="card-description text-caption text--secondary mb-3">
+                <div class="card-description text-caption text--secondary mb-3" data-testid="add-connection-code">
                   <code class="text-primary">addConnection(source, destination)</code>
                 </div>
                 
-                <div class="d-flex align-center mb-3 pa-2" style="background-color: #f5f5f5; border-radius: 4px;">
+                <div class="d-flex align-center mb-3 pa-2" style="background-color: #f5f5f5; border-radius: 4px;" data-testid="available-connections-info">
                   <v-icon small class="mr-2" color="info">mdi-information-outline</v-icon>
                   <span class="text-caption text--secondary">
                     Available connections: {{ availableConnectorIds.length }}
@@ -344,6 +365,7 @@
                   outlined
                   class="mt-4 mb-n3"
                   :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
+                  data-testid="source-connector-select"
                 />
                 
                 <v-select
@@ -357,6 +379,7 @@
                   outlined
                   class="mb-3"
                   :disabled="!sceneViewer || !centralPlant || availableConnectorIds.length === 0"
+                  data-testid="destination-connector-select"
                 />
                 
                 <v-btn
@@ -365,6 +388,7 @@
                   :disabled="!sceneViewer || !centralPlant || !selectedSourceConnector || !selectedDestinationConnector || selectedSourceConnector === selectedDestinationConnector"
                   elevation="2"
                   block
+                  data-testid="add-connection-button"
                 >
                   <v-icon small class="mr-1">mdi-connection</v-icon>
                   Add Connection
@@ -374,24 +398,25 @@
           </v-card>
 
           <!-- Update Paths Section -->
-          <v-card outlined class="mb-4">
+          <v-card outlined class="mb-4" data-testid="update-paths-section">
             <v-card-subtitle 
               class="d-flex align-center cursor-pointer" 
               @click="expandedSections.updatePaths = !expandedSections.updatePaths"
+              data-testid="update-paths-header"
             >
               <v-icon small class="mr-2" color="success">mdi-refresh</v-icon>
-              <span class="font-weight-medium">Update Paths</span>
+              <span class="font-weight-medium" data-testid="update-paths-title">Update Paths</span>
               <v-spacer></v-spacer>
-              <v-icon :class="{ 'rotate-180': expandedSections.updatePaths }">
+              <v-icon :class="{ 'rotate-180': expandedSections.updatePaths }" data-testid="update-paths-toggle">
                 mdi-chevron-down
               </v-icon>
             </v-card-subtitle>
             <v-expand-transition>
-              <v-card-text v-show="expandedSections.updatePaths" class="pt-2">
-                <div class="card-description text-caption text--secondary mb-2">
+              <v-card-text v-show="expandedSections.updatePaths" class="pt-2" data-testid="update-paths-content">
+                <div class="card-description text-caption text--secondary mb-2" data-testid="update-paths-description">
                   Update and finalize all connection paths
                 </div>
-                <div class="card-description text-caption text--secondary mb-3">
+                <div class="card-description text-caption text--secondary mb-3" data-testid="update-paths-code">
                   <code class="text-primary">updatePaths()</code>
                 </div>
                 
@@ -400,6 +425,7 @@
                   @click="updatePathsExample"
                   elevation="2"
                   block
+                  data-testid="update-paths-button"
                 >
                   <v-icon small class="mr-1">mdi-refresh</v-icon>
                   Update Paths
@@ -409,24 +435,25 @@
           </v-card>
 
           <!-- Import Scene Section -->
-          <v-card outlined class="mb-4">
+          <v-card outlined class="mb-4" data-testid="import-scene-section">
             <v-card-subtitle 
               class="d-flex align-center cursor-pointer" 
               @click="expandedSections.importScene = !expandedSections.importScene"
+              data-testid="import-scene-header"
             >
               <v-icon small class="mr-2" color="info">mdi-import</v-icon>
-              <span class="font-weight-medium">Import Scene</span>
+              <span class="font-weight-medium" data-testid="import-scene-title">Import Scene</span>
               <v-spacer></v-spacer>
-              <v-icon :class="{ 'rotate-180': expandedSections.importScene }">
+              <v-icon :class="{ 'rotate-180': expandedSections.importScene }" data-testid="import-scene-toggle">
                 mdi-chevron-down
               </v-icon>
             </v-card-subtitle>
             <v-expand-transition>
-              <v-card-text v-show="expandedSections.importScene" class="pt-2">
-                <div class="card-description text-caption text--secondary mb-2">
+              <v-card-text v-show="expandedSections.importScene" class="pt-2" data-testid="import-scene-content">
+                <div class="card-description text-caption text--secondary mb-2" data-testid="import-scene-description">
                   Import a JSON scene file to load components and connections
                 </div>
-                <div class="card-description text-caption text--secondary mb-3">
+                <div class="card-description text-caption text--secondary mb-3" data-testid="import-scene-code">
                   <code class="text-primary">importScene(jsonData)</code>
                 </div>
                 
@@ -435,6 +462,7 @@
                   @click="openFileImport"
                   elevation="2"
                   block
+                  data-testid="import-scene-button"
                 >
                   <v-icon small class="mr-1">mdi-import</v-icon>
                   Import Scene File
